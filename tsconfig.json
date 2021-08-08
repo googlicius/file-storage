@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "module": "commonjs",
+    "target": "es2015",
+    "declaration": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@file-storage": ["./packages/file-storage/lib/index.ts"],
+      "@common": ["./packages/common/lib/index.ts"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

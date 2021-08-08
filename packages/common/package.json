@@ -1,0 +1,26 @@
+{
+  "name": "@googlicius/file-storage-common",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "Dang Nguyen <haidang009@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "clean": "rm -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
