@@ -5,11 +5,12 @@
     "target": "es2015",
     "declaration": true,
     "esModuleInterop": true,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
     "paths": {
       "@file-storage": ["./packages/file-storage/lib/index.ts"],
-      "@common": ["./packages/common/lib/index.ts"]
+      "@googlicius/file-storage-common": ["./packages/common/lib"]
     }
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

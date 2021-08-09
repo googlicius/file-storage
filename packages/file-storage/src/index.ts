@@ -1,4 +1,4 @@
-import { common } from '@common';
+import { common } from '@googlicius/file-storage-common';
 
 export function fileStorage() {
   // TODO

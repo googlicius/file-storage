@@ -7,10 +7,6 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
     "dist"
   ],
@@ -19,6 +15,9 @@
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "test": "jest"
+  },
+  "dependencies": {
+    "@googlicius/file-storage-common": "^1.0.0"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",
