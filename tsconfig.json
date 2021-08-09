@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
+    "baseUrl": ".",
     "module": "commonjs",
     "target": "es2015",
     "declaration": true,
@@ -8,7 +8,7 @@
     "noEmitOnError": true,
     "skipLibCheck": true,
     "paths": {
-      "@file-storage": ["./packages/file-storage/lib/index.ts"],
+      "@file-storage": ["./packages/file-storage/lib"],
       "@googlicius/file-storage-common": ["./packages/common/lib"]
     }
   },
