@@ -3,7 +3,7 @@ import Storage from '@file-storage/core';
 import { Driver, FtpDiskConfig, getRootCwd } from '@file-storage/common';
 import { FtpDisk } from './ftp-disk';
 
-describe('FTP Disk', () => {
+describe('FTP Disk test', () => {
   beforeAll(() => {
     Storage.config<FtpDiskConfig>({
       diskConfigs: [
@@ -34,10 +34,18 @@ describe('FTP Disk', () => {
 
   test('Default disk is sammy', () => {
     expect(Storage.defaultDisk.name).toEqual('sammy');
+    expect(Storage.name).toEqual('sammy');
   });
 
   test('Upload image to ftp', async () => {
     return expect(Storage.disk('sammy').put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
+      code: 226,
+      message: '226 Transfer complete.',
+    });
+  });
+
+  test('Upload using Storage facade', () => {
+    return expect(Storage.put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
       code: 226,
       message: '226 Transfer complete.',
     });
@@ -61,7 +69,7 @@ describe('FTP Disk', () => {
   test('File is exists', async () => {
     await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
-    return expect(Storage.defaultDisk.exists('test_upload/bird.jpeg')).resolves.toEqual(true);
+    return expect(Storage.exists('test_upload/bird.jpeg')).resolves.toEqual(true);
   });
 
   test('File is not exists', async () => {

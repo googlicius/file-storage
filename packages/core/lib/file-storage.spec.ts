@@ -23,6 +23,18 @@ describe('Storage test', () => {
     });
   });
 
+  describe('Storage as a disk test', () => {
+    const fileReadStream = fs.createReadStream(
+      getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
+    );
+
+    test('Upload image to local disk', () => {
+      expect(Storage.put(fileReadStream, 'test_upload/bird.jpeg')).resolves.toEqual(
+        'Uploading success!',
+      );
+    });
+  });
+
   describe('Storage: config errors.', () => {
     test('Not allows more than one default disk.', () => {
       expect(() =>
@@ -94,15 +106,5 @@ describe('Storage test', () => {
     //     });
     //   }).toThrowError('Please install `@file-storage/s3` for s3 driver');
     // });
-  });
-
-  describe('Storage initialize', () => {
-    test('Error when trying initialize storage class', () => {
-      const t = () => {
-        new Storage();
-      };
-
-      expect(t).toThrowError();
-    });
   });
 });

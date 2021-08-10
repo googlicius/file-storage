@@ -94,6 +94,13 @@ describe('S3 Disk test', () => {
     });
   });
 
+  test('Upload to s3 using Storage facade', () => {
+    return expect(Storage.put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
+      Bucket: bucketName2,
+      Key: 'bird.jpeg',
+    });
+  });
+
   test('Download image from s3', async () => {
     await Storage.defaultDisk.put(fileReadStream, 'test_upload/bird2.jpeg');
     return expect(Storage.defaultDisk.get('test_upload/bird2.jpeg')).resolves.toBeTruthy();
@@ -134,7 +141,10 @@ describe('S3 Disk test', () => {
   });
 
   test('File is not exists', async () => {
-    return expect(Storage.disk('s3Test').exists('not-exists.jpeg')).resolves.toEqual(false);
+    const exist = await Storage.disk('s3Test').exists('not-exists.jpeg');
+    const exist2 = await Storage.exists('not-exists.jpeg');
+    expect(exist).toEqual(false);
+    expect(exist2).toEqual(false);
   });
 
   test('Get file size', async () => {
@@ -149,6 +159,8 @@ describe('S3 Disk test', () => {
   test('Last modified', async () => {
     await Storage.disk('s3Default').put(fileReadStream, 'bird-images/bird.jpeg');
     const lastMod = await Storage.defaultDisk.lastModified('bird-images/bird.jpeg');
+    const lastMod2 = await Storage.lastModified('bird-images/bird.jpeg');
     expect(typeof lastMod).toBe('number');
+    expect(typeof lastMod2).toBe('number');
   });
 });
