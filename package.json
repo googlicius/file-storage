@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "file-storage",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -10,19 +10,17 @@
     "clean": "lerna run clean",
     "pub": "lerna run publish",
     "test": "lerna run test",
-    "lint": "eslint --ext js,ts,tsx ."
+    "lint": "eslint --ext ts .",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-typescript": "^7.14.5",
-    "@types/ftp": "^0.3.32",
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
-    "aws-sdk": "^2.953.0",
     "babel-jest": "^27.0.6",
-    "basic-ftp": "^4.6.6",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

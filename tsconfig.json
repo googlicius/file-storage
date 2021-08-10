@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "paths": {
       "@file-storage": ["./packages/file-storage/lib"],
-      "@googlicius/file-storage-common": ["./packages/common/lib"]
+      "@common": ["./packages/common/lib"]
     }
   },
   "exclude": ["node_modules", "dist"]

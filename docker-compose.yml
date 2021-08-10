@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=s3
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - 'localstackdata:/tmp'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  ftp-server:
+    image: bogem/ftp
+    ports:
+      - '21:21'
+      - '47400-47470:47400-47470'
+    environment:
+      - FTP_USER=usertest
+      - FTP_PASS=P@ssw0rd
+      - PASV_ADDRESS=127.0.0.1
+    volumes:
+      - 'ftpdata:/home/vsftpd'
+
+  sftp-server:
+    image: atmoz/sftp
+    volumes:
+      - 'sftpdata:/home/usertest/'
+    ports:
+      - '2222:22'
+    command: usertest:P@ssw0rd:::upload
+
+  # redis:
+  #   image: 'redis'
+  #   ports:
+  #     - 6379:6379
+
+volumes:
+  localstackdata:
+  sftpdata:
+  ftpdata:

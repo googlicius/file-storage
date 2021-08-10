@@ -1,5 +1,5 @@
 {
-  "name": "@googlicius/file-storage",
+  "name": "@file-storage/core",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "Dang Nguyen <haidang009@gmail.com>",
@@ -17,7 +17,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@googlicius/file-storage-common": "^1.0.0"
+    "@file-storage/common": "^1.0.0",
+    "@file-storage/local": "^1.0.0"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",

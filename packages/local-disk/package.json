@@ -1,7 +1,7 @@
 {
-  "name": "@file-storage/common",
+  "name": "@file-storage/local",
   "version": "1.0.0",
-  "description": "> TODO: description",
+  "description": "Local disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
   "license": "MIT",
@@ -13,7 +13,11 @@
   "scripts": {
     "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json"
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@file-storage/common": "^1.0.0"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",

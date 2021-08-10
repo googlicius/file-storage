@@ -1,7 +1,7 @@
 {
-  "name": "@file-storage/common",
+  "name": "@file-storage/s3",
   "version": "1.0.0",
-  "description": "> TODO: description",
+  "description": "S3 disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
   "license": "MIT",
@@ -13,7 +13,15 @@
   "scripts": {
     "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json"
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@file-storage/common": "^1.0.0",
+    "aws-sdk": "^2.953.0"
+  },
+  "peerDependencies": {
+    "@file-storage/core": "^1.0.0"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",
