@@ -2,8 +2,5 @@
   "packages": ["packages/*", "examples/*"],
   "version": "independent",
   "useWorkspaces": true,
-  "npmClient": "yarn",
-  "publishConfig": {
-    "access": "public"
-  }
+  "npmClient": "yarn"
 }

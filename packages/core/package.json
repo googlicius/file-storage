@@ -10,6 +10,10 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "scripts": {
     "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
@@ -23,5 +27,6 @@
   "devDependencies": {
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
-  }
+  },
+  "gitHead": "c833ff5b47a5374c0b07351e8008c88cd3e7e3e3"
 }
