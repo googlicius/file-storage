@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/local",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Local disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@file-storage/common": "^1.0.2"
+    "@file-storage/common": "^1.0.3"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",
