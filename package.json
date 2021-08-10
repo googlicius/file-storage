@@ -2,13 +2,12 @@
   "name": "file-storage",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",
-    "pub": "lerna run publish",
+    "pub": "lerna publish",
     "test": "lerna run test",
     "lint": "eslint --ext ts .",
     "prepare": "husky install"
