@@ -1,9 +1,9 @@
 {
-  "packages": [
-    "packages/*",
-    "examples/*"
-  ],
+  "packages": ["packages/*", "examples/*"],
   "version": "independent",
   "useWorkspaces": true,
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "publishConfig": {
+    "access": "public"
+  }
 }
