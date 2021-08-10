@@ -56,7 +56,7 @@ jobs:
         run: |
           yarn lint
           yarn build
-          yarn test --detectOpenHandles
+          yarn test:detectOpenHandles
 
       - name: Stop containers
         if: always()

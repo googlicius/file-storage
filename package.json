@@ -9,6 +9,7 @@
     "clean": "lerna run clean",
     "pub": "lerna publish",
     "test": "lerna run test",
+    "test:detectOpenHandles": "lerna run test:detectOpenHandles",
     "lint": "eslint --ext ts .",
     "prepare": "husky install"
   },

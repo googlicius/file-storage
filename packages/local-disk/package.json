@@ -18,7 +18,8 @@
     "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@file-storage/common": "^1.0.3"
