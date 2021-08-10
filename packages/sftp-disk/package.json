@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/sftp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sftp disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@file-storage/common": "^1.0.1",
+    "@file-storage/common": "^1.0.2",
     "ssh2-sftp-client": "^7.0.0"
   },
   "peerDependencies": {
