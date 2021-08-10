@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "> TODO: description",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@file-storage/common": "^1.0.3",
-    "@file-storage/local": "^1.0.3"
+    "@file-storage/local": "^1.0.4"
   },
   "devDependencies": {
     "rimraf": "~3.0.2",

@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/ftp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Ftp disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
