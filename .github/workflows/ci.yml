@@ -26,7 +26,7 @@ jobs:
       - name: Start containers
         run: |
           docker-compose -f "docker-compose.yml" up -d
-          echo "Waiting for 30s..."
+          echo "Waiting for all container healthy..."
           sleep 30
           docker-compose logs
           echo "Containers ready."
