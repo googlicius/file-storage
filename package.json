@@ -4,6 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/googlicius/file-storage.git"
+  },
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",

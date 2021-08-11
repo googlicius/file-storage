@@ -10,6 +10,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/googlicius/file-storage.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
