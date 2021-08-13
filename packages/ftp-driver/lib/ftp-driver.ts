@@ -1,21 +1,18 @@
 import { AccessOptions, Client, FileInfo, FTPResponse } from 'basic-ftp';
 import { dirname } from 'path';
 import { PassThrough, Readable, Stream } from 'stream';
-import { CommonDisk, Disk, Driver, FtpDiskConfig } from '@file-storage/common';
+import { Driver, DriverName, FtpDiskConfig } from '@file-storage/common';
 
-export class FtpDisk extends CommonDisk implements Disk {
-  readonly name: string;
-  readonly driver: Driver;
+export class FtpDriver extends Driver {
+  static readonly driverName = DriverName.FTP;
   readonly client: Client;
 
   private accessOptions: AccessOptions;
   private root: string;
 
   constructor(diskConfig: FtpDiskConfig) {
-    super();
-    const { name, accessOptions, ftpContext, root = '' } = diskConfig;
-    this.name = name;
-    this.driver = Driver.FTP;
+    super(diskConfig);
+    const { accessOptions, ftpContext, root = '' } = diskConfig;
     this.accessOptions = accessOptions;
     this.root = root;
     this.client = new Client();

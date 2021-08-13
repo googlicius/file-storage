@@ -1,8 +1,8 @@
-import { Driver } from '../enums/driver.enum';
+import { DriverName } from '../enums/driver-name.enum';
 import { DiskConfig } from './disk-config.interface';
 
 export interface SftpDiskConfig extends DiskConfig {
-  driver: Driver.SFTP;
+  driver: DriverName.SFTP;
   root?: string;
   accessOptions: {
     host: string;

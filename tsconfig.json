@@ -6,11 +6,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "noEmitOnError": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@file-storage": ["./packages/file-storage/lib"],
-      "@common": ["./packages/common/lib"]
-    }
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "dist"]
 }

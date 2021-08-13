@@ -1,14 +1,14 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { Driver, FtpDiskConfig, getRootCwd } from '@file-storage/common';
-import { FtpDisk } from './ftp-disk';
+import { DriverName, FtpDiskConfig, getRootCwd } from '@file-storage/common';
+import { FtpDriver } from './ftp-driver';
 
 describe('FTP Disk test', () => {
   beforeAll(() => {
     Storage.config<FtpDiskConfig>({
       diskConfigs: [
         {
-          driver: Driver.FTP,
+          driver: DriverName.FTP,
           name: 'sammy',
           isDefault: true,
           root: '/upload',
@@ -19,12 +19,7 @@ describe('FTP Disk test', () => {
           },
         },
       ],
-      customDrivers: [
-        {
-          name: Driver.FTP,
-          disk: FtpDisk,
-        },
-      ],
+      customDrivers: [FtpDriver],
     });
   });
 

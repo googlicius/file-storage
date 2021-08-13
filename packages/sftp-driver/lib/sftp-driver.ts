@@ -2,18 +2,17 @@ import { Readable, PassThrough } from 'stream';
 import { dirname } from 'path';
 import { ReadStream } from 'fs';
 import Client from 'ssh2-sftp-client';
-import { AnyObject, Disk, Driver, SftpDiskConfig } from '@file-storage/common';
+import { AnyObject, Driver, DriverName, SftpDiskConfig } from '@file-storage/common';
 
-export class SftpDisk implements Disk {
-  readonly name: string;
-  readonly driver: Driver;
+export class SftpDriver extends Driver {
+  static readonly driverName = DriverName.SFTP;
   readonly client: Client;
   private root: string;
   private accessOptions: AnyObject;
 
-  constructor({ name, root = '', accessOptions }: SftpDiskConfig) {
-    this.name = name;
-    this.driver = Driver.SFTP;
+  constructor(config: SftpDiskConfig) {
+    super(config);
+    const { root = '', accessOptions } = config;
     this.root = root;
     this.accessOptions = accessOptions;
     this.client = new Client();

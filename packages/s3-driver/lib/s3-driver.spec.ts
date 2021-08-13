@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { Driver, getRootCwd } from '@file-storage/common';
-import { S3Disk } from './s3-disk';
+import { DriverName, getRootCwd } from '@file-storage/common';
+import { S3Driver } from './s3-driver';
 
 describe('S3 Disk test', () => {
   const bucketName1 = 'mybucket1';
@@ -11,7 +11,7 @@ describe('S3 Disk test', () => {
     Storage.config({
       diskConfigs: [
         {
-          driver: Driver.S3,
+          driver: DriverName.S3,
           name: 's3Test',
           bucketName: bucketName1,
           endpoint: 'http://localhost:4566',
@@ -23,7 +23,7 @@ describe('S3 Disk test', () => {
           },
         },
         {
-          driver: Driver.S3,
+          driver: DriverName.S3,
           name: 's3Default',
           bucketName: bucketName2,
           isDefault: true,
@@ -39,8 +39,8 @@ describe('S3 Disk test', () => {
     });
 
     await Promise.all([
-      Storage.disk<S3Disk>('s3Test').setupMockS3(bucketName1),
-      Storage.disk<S3Disk>('s3Test').setupMockS3(bucketName2),
+      Storage.disk<S3Driver>('s3Test').setupMockS3(bucketName1),
+      Storage.disk<S3Driver>('s3Test').setupMockS3(bucketName2),
     ]);
   });
 
@@ -57,7 +57,7 @@ describe('S3 Disk test', () => {
   });
 
   // test('Default disk does not have any bucket', async () => {
-  //   const bucketListResult = await (Storage.defaultDisk as S3Disk).s3Instance
+  //   const bucketListResult = await (Storage.defaultDisk as S3Driver).s3Instance
   //     .listBuckets()
   //     .promise();
 
@@ -121,7 +121,7 @@ describe('S3 Disk test', () => {
   });
 
   test('Upload to another bucket', async () => {
-    const s3Disk = <S3Disk>Storage.defaultDisk;
+    const s3Disk = <S3Driver>Storage.defaultDisk;
     await s3Disk.setupMockS3('another-bucket');
 
     return expect(

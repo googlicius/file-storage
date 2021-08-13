@@ -1,7 +1,7 @@
-import { Driver } from '../enums/driver.enum';
+import { DriverName } from '../enums/driver-name.enum';
 import { DiskConfig } from './disk-config.interface';
 
 export interface LocalDiskConfig extends DiskConfig {
-  driver: Driver.LOCAL;
+  driver: DriverName.LOCAL;
   root?: string;
 }

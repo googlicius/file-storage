@@ -1,6 +1,7 @@
 import {
+  Class,
   DiskConfig,
-  DriverDiskMap,
+  Driver,
   LocalDiskConfig,
   S3DiskConfig,
   SftpDiskConfig,
@@ -17,5 +18,5 @@ export interface StorageConfiguration<T extends DiskConfig> {
   /**
    * Add one or more your custom drivers.
    */
-  customDrivers?: DriverDiskMap[];
+  customDrivers?: Class<Driver>[];
 }

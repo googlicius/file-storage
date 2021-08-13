@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Storage } from './file-storage';
-import { Driver, getRootCwd } from '@file-storage/common';
+import { DriverName, getRootCwd } from '@file-storage/common';
 
 describe('Storage test', () => {
   describe('Storage: No config specified.', () => {
@@ -41,13 +41,13 @@ describe('Storage test', () => {
         Storage.config({
           diskConfigs: [
             {
-              driver: Driver.LOCAL,
+              driver: DriverName.LOCAL,
               name: 'local',
               root: 'storage',
               isDefault: true,
             },
             {
-              driver: Driver.S3,
+              driver: DriverName.S3,
               name: 's3Default',
               bucketName: 'startover',
               isDefault: true,
@@ -62,13 +62,13 @@ describe('Storage test', () => {
         Storage.config({
           diskConfigs: [
             {
-              driver: Driver.LOCAL,
+              driver: DriverName.LOCAL,
               name: 'myDisk',
               root: 'storage',
               isDefault: true,
             },
             {
-              driver: Driver.S3,
+              driver: DriverName.S3,
               name: 'myDisk',
               bucketName: 'startover',
             },

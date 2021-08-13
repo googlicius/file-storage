@@ -39,7 +39,7 @@ By default only local driver is supported, if you want to use another driver, yo
 - SFTP: `yarn add @file-storage/sftp`
 - Google Cloud Storage: `yarn add @file-storage/gcs`
 
-With no configuration, it will uploads to local disk. You can specific yours by using `config` method:
+If there is no configuration, it will uploads to local disk. You can specific yours by using `config` method:
 
 ```javascript
 import Storage from '@file-storage/core';
@@ -80,16 +80,16 @@ If you want to interact with a specific disk instead of the default, use `disk` 
 Storage.disk('local').get('/path/to/local/my-image.png');
 ```
 
-## Your custom driver
+## Create your custom driver
 
-If you want another storage, just defines a custom disk by implement `Disk` interface:
+If bult-in drivers doesn't match your need, just defines a custom driver by extends `Driver` abstract class:
 
 ```typescript
 import Storage from '@file-storage/core';
-import { Disk } from '@file-storage/common';
+import { Driver } from '@file-storage/common';
 
-class OneDriveDisk implement Disk {
-  // Fill all Disk's properties and methods.
+class OneDrive extends Driver {
+  // Define all Driver's properties and methods.
 }
 
 // And provide it to Storage config:
@@ -102,21 +102,17 @@ Storage.config({
       ...
     }
   ],
-  customDrivers: [
-    {
-      name: 'oneDriver',
-      disk: OneDriveDisk,
-    },
-  ],
+  customDrivers: [OneDrive],
 });
 ```
 
 ## TODO
 
-- Create interface for all result (Need same result format for all drivers).
-- Refactor `customDrivers` option: provides disk is enough.
-- Implement GCS disk.
-- API section: detailed of each driver.
+- [ ] Create interface for all result (Need same result format for all drivers).
+- [x] Refactor `customDrivers` option: provides disk defination is enough.
+- [ ] Implement GCS disk.
+- [ ] Put file from a local path.
+- [ ] API section: detailed of each driver.
 
 ## License
 

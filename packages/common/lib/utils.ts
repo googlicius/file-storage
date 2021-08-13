@@ -43,11 +43,14 @@ export function exists(path: string): Promise<void> {
 /**
  * Require a module es module as its default value.
  */
-export function requireDefaultModule(path: string) {
+export function requireDefaultModule(path: string, notThrow = true) {
   try {
     return require(path).default;
   } catch (error) {
-    return null;
+    if (notThrow) {
+      return null;
+    }
+    throw error;
   }
 }
 

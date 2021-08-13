@@ -1,6 +1,5 @@
 {
   "name": "file-storage",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
@@ -8,6 +7,11 @@
     "type": "git",
     "url": "https://github.com/googlicius/file-storage.git"
   },
+  "keywords": [
+    "File storage Nodejs",
+    "File system abastraction",
+    "typescript"
+  ],
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",

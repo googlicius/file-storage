@@ -1,31 +1,23 @@
-/**
- * _____ _ _        ____  _
- * |  ___(_) | ___  / ___|| |_ ___  _ __ __ _  __ _  ___
- * | |_  | | |/ _ \ \___ \| __/ _ \| '__/ _` |/ _` |/ _ \
- * |  _| | | |  __/  ___) | || (_) | | | (_| | (_| |  __/
- * |_|   |_|_|\___| |____/ \__\___/|_|  \__,_|\__, |\___|
- *                                            |___/
- */
-
 import { Stream } from 'stream';
 import {
   DiskConfig,
+  DriverName,
   Driver,
-  Disk,
-  DriverDiskMap,
   requireDefaultModule,
   LocalDiskConfig,
+  Class,
 } from '@file-storage/common';
 import { BuitInDiskConfig, StorageConfiguration } from './types';
+// import S3Driver2 from '@file-storage/local';
 
-const S3Disk = requireDefaultModule('@file-storage/s3');
-const LocalDisk = requireDefaultModule('@file-storage/local');
-const SftpDisk = requireDefaultModule('@file-storage/sftp');
+const S3Driver = requireDefaultModule('@file-storage/s3');
+const LocalDriver = requireDefaultModule('@file-storage/local');
+const SftpDriver = requireDefaultModule('@file-storage/sftp');
 
-let configableDefaultDiskName = 'local';
+let configableDefaultDriverName = 'local';
 
 const defaultDiskConfig: LocalDiskConfig = {
-  driver: Driver.LOCAL,
+  driver: DriverName.LOCAL,
   name: 'local',
   root: 'storage',
   isDefault: true,
@@ -33,20 +25,7 @@ const defaultDiskConfig: LocalDiskConfig = {
 
 let availableDisks: (DiskConfig | BuitInDiskConfig)[] = [defaultDiskConfig];
 
-const driverDiskMaps: DriverDiskMap[] = [
-  {
-    name: Driver.S3,
-    disk: S3Disk,
-  },
-  {
-    name: Driver.LOCAL,
-    disk: LocalDisk,
-  },
-  {
-    name: Driver.SFTP,
-    disk: SftpDisk,
-  },
-];
+const drivers: Class<Driver>[] = [S3Driver, LocalDriver, SftpDriver];
 
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
@@ -82,56 +61,54 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   // Set default disk.
   for (const diskConfig of availableDisks) {
     if (diskConfig.isDefault) {
-      configableDefaultDiskName = diskConfig.name;
+      configableDefaultDriverName = diskConfig.name;
       break;
     }
   }
 }
 
-function addCustomDriver(map: DriverDiskMap[] = []) {
+function addCustomDriver(map: Class<Driver>[] = []) {
   if (map.length > 0) {
-    driverDiskMaps.push(...map);
+    drivers.push(...map);
   }
 }
 
-function getDisk<U extends Disk>(diskName: string = configableDefaultDiskName): U {
+function getDisk<U extends Driver>(diskName: string = configableDefaultDriverName): U {
   const diskConfig = availableDisks.find((item) => item.name === diskName);
 
   if (!diskConfig) {
     throw new Error(`Given disk is not defined: ${diskName}`);
   }
 
-  const driverDiskMap = driverDiskMaps.find((item) => item.name === diskConfig.driver);
-
-  if (!driverDiskMap) {
-    throw new Error(`Driver '${diskConfig.driver}' is not declared.`);
-  }
-
   try {
-    return new driverDiskMap.disk(diskConfig) as U;
+    const driver = drivers.find((item) => item['driverName'] === diskConfig.driver);
+    return new driver(diskConfig) as U;
   } catch (error) {
-    throw new Error(
-      `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
-    );
+    if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
+      throw new Error(
+        `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
+      );
+    }
+    throw new Error(`Driver '${diskConfig.driver}' is not declared.`);
   }
 }
 
 /**
  * `Storage` provides a filesystem abstraction, simple way to uses drivers for working with local filesystems, Amazon S3,...
  */
-class StorageClass implements Disk {
+class StorageClass implements Driver {
   /**
    * Get default disk instance.
    */
-  defaultDisk: Disk = getDisk(configableDefaultDiskName);
+  defaultDisk: Driver = getDisk(configableDefaultDriverName);
 
   get name() {
     return this.defaultDisk.name;
   }
 
-  get driver() {
-    return this.defaultDisk.driver;
-  }
+  // get driver() {
+  //   return this.defaultDisk.driver;
+  // }
 
   /**
    * Config for storage methods supported in the application.
@@ -142,13 +119,13 @@ class StorageClass implements Disk {
     addCustomDriver(customDrivers);
     handleDiskConfigs(diskConfigs);
 
-    this.defaultDisk = getDisk(configableDefaultDiskName);
+    this.defaultDisk = getDisk(configableDefaultDriverName);
   }
 
   /**
    * Get disk instance by diskName.
    */
-  disk<U extends Disk>(diskName?: string): U {
+  disk<U extends Driver>(diskName?: string): U {
     if (!diskName) {
       return this.defaultDisk as U;
     }

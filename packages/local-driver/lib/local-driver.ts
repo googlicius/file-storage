@@ -2,25 +2,22 @@ import fs, { ReadStream } from 'fs';
 import { dirname } from 'path';
 import { Stream } from 'stream';
 import {
-  CommonDisk,
-  Disk,
   Driver,
+  DriverName,
   ensureDirectoryExistence,
   exists,
   LocalDiskConfig,
   toStream,
 } from '@file-storage/common';
 
-export class LocalDisk extends CommonDisk implements Disk {
+export class LocalDriver extends Driver {
   private root: string;
-  readonly name: string;
-  readonly driver: Driver;
+  static readonly driverName = DriverName.LOCAL;
 
-  constructor({ name, root = '' }: LocalDiskConfig) {
-    super();
+  constructor(config: LocalDiskConfig) {
+    super(config);
+    const { root = '' } = config;
     this.root = root;
-    this.name = name;
-    this.driver = Driver.LOCAL;
   }
 
   private rootPath(path: string): string {

@@ -1,7 +1,7 @@
 {
   "name": "@file-storage/local",
   "version": "1.0.4",
-  "description": "Local disk driver for file-storage",
+  "description": "Local driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
   "license": "MIT",

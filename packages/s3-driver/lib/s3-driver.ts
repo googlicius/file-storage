@@ -7,24 +7,22 @@ import S3, {
 import { AWSError } from 'aws-sdk/lib/error';
 import { PromiseResult } from 'aws-sdk/lib/request';
 import { PassThrough, Stream } from 'stream';
-import { CommonDisk, Disk, Driver, S3DiskConfig } from '@file-storage/common';
+import { Driver, DriverName, S3DiskConfig } from '@file-storage/common';
 
-export class S3Disk extends CommonDisk implements Disk {
+export class S3Driver extends Driver {
   private bucketName: string;
   private publicUrl?: string;
   readonly s3Instance: S3;
-  readonly name: string;
-  readonly driver: Driver;
+  static readonly driverName = DriverName.S3;
 
-  constructor({ bucketName, name, publicUrl, ...clientConfig }: S3DiskConfig) {
-    super();
+  constructor(config: S3DiskConfig) {
+    super(config);
+    const { bucketName, publicUrl, ...clientConfig } = config;
     if (!bucketName) {
       throw new Error('Bucket name is required');
     }
     this.bucketName = bucketName;
     this.publicUrl = publicUrl;
-    this.name = name;
-    this.driver = Driver.S3;
     this.s3Instance = new S3(clientConfig);
   }
 
