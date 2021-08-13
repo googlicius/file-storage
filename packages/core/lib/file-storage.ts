@@ -8,9 +8,9 @@ import {
   Class,
 } from '@file-storage/common';
 import { BuitInDiskConfig, StorageConfiguration } from './types';
-// import S3Driver2 from '@file-storage/local';
 
 const S3Driver = requireDefaultModule('@file-storage/s3');
+const FtpDriver = requireDefaultModule('@file-storage/ftp');
 const LocalDriver = requireDefaultModule('@file-storage/local');
 const SftpDriver = requireDefaultModule('@file-storage/sftp');
 
@@ -25,7 +25,7 @@ const defaultDiskConfig: LocalDiskConfig = {
 
 let availableDisks: (DiskConfig | BuitInDiskConfig)[] = [defaultDiskConfig];
 
-const drivers: Class<Driver>[] = [S3Driver, LocalDriver, SftpDriver];
+const drivers: Class<Driver>[] = [S3Driver, LocalDriver, FtpDriver, SftpDriver];
 
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
