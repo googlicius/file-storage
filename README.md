@@ -43,17 +43,17 @@ If there is no configuration, it will uploads to local disk. You can specific yo
 
 ```javascript
 import Storage from '@file-storage/core';
-import { Driver } from '@file-storage/common';
+import { DriverName } from '@file-storage/common';
 
 Storage.config({
   diskConfigs: [
     {
-      driver: Driver.LOCAL,
+      driver: DriverName.LOCAL,
       name: 'local',
       root: 'public',
     },
     {
-      driver: Driver.S3,
+      driver: DriverName.S3,
       name: 'mys3',
       bucketName: 'mybucket',
       isDefault: true, // Default disk that you can access directly via Storage facade.
@@ -88,15 +88,31 @@ If bult-in drivers doesn't match your need, just defines a custom driver by exte
 import Storage from '@file-storage/core';
 import { Driver } from '@file-storage/common';
 
-class OneDrive extends Driver {
-  // Define all Driver's properties and methods.
+interface OneDriveConfig {
+  name: string; // driver instance name is required.
+  ...
 }
 
-// And provide it to Storage config:
-Storage.config({
+class OneDrive extends Driver {
+  static readonly driverName = 'one_drive';
+
+  constructor(config: OneDriveConfig) {
+    super(config);
+    ...
+  }
+
+  // Define all Driver's methods here.
+}
+
+```
+
+And provide it to Storage.config:
+
+```typescript
+Storage.config<OneDriveConfig>({
   diskConfigs: [
     {
-      driver: 'oneDriver',
+      driver: 'one_drive',
       name: 'myCustomDisk',
       isDefault: true,
       ...
@@ -113,6 +129,7 @@ Storage.config({
 - [ ] Implement GCS disk.
 - [ ] Put file from a local path.
 - [ ] API section: detailed of each driver.
+- [ ] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
 
 ## License
 
