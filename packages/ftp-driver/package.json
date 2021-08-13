@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/ftp",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Ftp disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -26,7 +26,7 @@
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "@file-storage/common": "^1.0.3",
+    "@file-storage/common": "^1.1.0",
     "basic-ftp": "^4.6.6"
   },
   "peerDependencies": {
