@@ -6,16 +6,17 @@ _|    _|_|\___|_____/ \__|\___/ _|  \__,_|\__, |\___|
 A file system abstraction for Node.js     |___/
 ```
 
-A simple abstraction for interact with file system inspired by [Laravel File System](https://laravel.com/docs/8.x/filesystem), provides one interface for many kind of drivers: `local`, `ftp`, `sftp`, `Amazon S3`, and `Google Cloud Storage`, even your custom driver.
+[![Test](https://github.com/googlicius/file-storage/actions/workflows/ci.yml/badge.svg)](https://github.com/googlicius/file-storage/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Intallation
+A simple abstraction to interact with file system inspired by [Laravel File System](https://laravel.com/docs/8.x/filesystem), provides one interface for many kind of drivers: `local`, `ftp`, `sftp`, `Amazon S3`, and `Google Cloud Storage`, even your custom driver.
+
+## Installation
 
 ```bash
-yarn add @file-storage/core
+$ yarn add @file-storage/core @file-storage/common
 
 # Or npm
-
-npm install @file-storage/core
+$ npm install @file-storage/core @file-storage/common
 ```
 
 And upload a file to local, it will be stored in `storage` folder in your root project directory by default:
@@ -74,10 +75,23 @@ Storage.get('/path/to/s3-bucket/my-image.png');
 
 ## Obtain disk instance:
 
-If you want to interact with a specific disk instead of the default, use `disk` method to get that disk instance:
+If you want to interact with a specific disk instead of the default, use `disk` method to get that instance:
 
 ```javascript
 Storage.disk('local').get('/path/to/local/my-image.png');
+```
+
+## Hash file name
+
+Enable hash file name to prevent a file get replaced when uploading same file (or same name):
+
+```javascript
+Storage.config({
+  ...
+  enableHash: true,
+});
+
+// The path uploaded will be like this: /path/to/image/my-image_$ru6eu3.png
 ```
 
 ## Create your custom driver
@@ -106,7 +120,7 @@ class OneDrive extends Driver {
 
 ```
 
-And provide it to Storage.config:
+And provide it to Storage.customDrivers:
 
 ```typescript
 Storage.config<OneDriveConfig>({
@@ -122,6 +136,20 @@ Storage.config<OneDriveConfig>({
 });
 ```
 
+## Image manipulation
+
+If you want to upload image and also creates many diferent sizes for web resonsive, install this package, it is acting as a plugin, will generates those image sizes automatically:
+
+```bash
+$ yarn add @file-storage/image-manipulation
+```
+
+**HINT**: `Image manipulation` only available on Starage facade, If you obtain a specific disk instance, set the second parameter to true to obtain a storage instance insteads:
+
+```javascript
+Storage.disk('your-disk', true); // Storage instance.
+```
+
 ## TODO
 
 - [ ] Create interface for all result (Need same result format for all drivers).
@@ -130,6 +158,7 @@ Storage.config<OneDriveConfig>({
 - [ ] Put file from a local path.
 - [ ] API section: detailed of each driver.
 - [ ] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
+- [ ] Hash file name.
 
 ## License
 

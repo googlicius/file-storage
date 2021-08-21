@@ -1,6 +1,10 @@
 import { Stream } from 'stream';
+import sharp from 'sharp';
 import { DriverName } from './enums/driver-name.enum';
 import { DiskConfig } from './types/disk-config.interface';
+import { ImageStats } from './types/image-stats.interface';
+import { bytesToKbytes, getExt, streamToBuffer } from './utils';
+import { PutResult } from './types/put-result.interface';
 
 const request = require('request');
 
@@ -9,9 +13,28 @@ export abstract class Driver {
 
   constructor({ name }: DiskConfig) {
     this.name = name;
+
+    return new Proxy(this, {
+      get: (target, prop) => {
+        if (typeof target[prop] !== 'function') {
+          return target[prop];
+        }
+        return async (...args: any[]) => {
+          try {
+            return await target[prop](...args);
+          } catch (error) {
+            if (this.errorHandler) {
+              this.errorHandler(error);
+            }
+          }
+        };
+      },
+    });
   }
 
   init?: () => Promise<void>;
+
+  protected errorHandler?(error: any): void;
 
   /**
    * Get full url of the file
@@ -37,11 +60,11 @@ export abstract class Driver {
   /**
    * Put to specific disk from a stream or buffer.
    *
-   * @param stream stream.Stream
+   * @param data stream.Stream | Buffer
    * @param path string
    * @throws If file doesn't exists.
    */
-  abstract put(stream: Stream, path: string): Promise<any>;
+  abstract put(data: Stream | Buffer, path: string): Promise<PutResult>;
 
   /**
    * Get a file.
@@ -104,5 +127,29 @@ export abstract class Driver {
         }
       });
     });
+  }
+
+  /**
+   * Get image metadatas.
+   *
+   * @param path Path of image
+   * @param keepBuffer Put image buffer in the result.
+   */
+  async imageStats(path: string, keepBuffer = false): Promise<ImageStats> {
+    const stream = await this.get(path);
+    const buffer = await streamToBuffer(stream);
+    const { format, size, width, height } = await sharp(buffer).metadata();
+
+    return {
+      name: path.replace(/^.*[\\/]/, ''),
+      path,
+      size: bytesToKbytes(size),
+      width,
+      height,
+      mime: format,
+      ext: getExt(path),
+      hash: null,
+      ...(keepBuffer && { buffer }),
+    };
   }
 }

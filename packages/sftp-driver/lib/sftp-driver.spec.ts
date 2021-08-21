@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, getRootCwd } from '@file-storage/common';
+import { DriverName, FileNotFoundError, getRootCwd } from '@file-storage/common';
 
 describe('Sftp Disk test', () => {
   beforeAll(() => {
@@ -22,20 +22,52 @@ describe('Sftp Disk test', () => {
     });
   });
 
-  const fileReadStream = fs.createReadStream(
-    getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-  );
+  const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
 
   test('Upload image to sftp', () => {
-    return expect(Storage.defaultDisk.put(fileReadStream, 'dog.jpeg')).resolves.toEqual(
-      'Uploaded data stream to /upload/dog.jpeg',
-    );
+    return expect(Storage.put(fileReadStream, 'dog.jpeg')).resolves.toMatchObject({
+      success: true,
+      message: 'Uploading success!',
+    });
+  });
+
+  test('Upload sftp large image will uploaded to many formats', () => {
+    // const imageFileStream = fs.createReadStream(
+    //   getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
+    // );
+    const birdReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    return expect(Storage.put(birdReadStream, 'my-photo/bird.jpeg')).resolves.toMatchObject({
+      success: true,
+      message: 'Uploading success!',
+      formats: {
+        thumbnail: {
+          name: 'thumbnail_bird.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 234,
+          height: 156,
+          size: 16.47,
+          path: 'my-photo/thumbnail_bird.jpeg',
+        },
+        small: {
+          name: 'small_bird.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 500,
+          height: 333,
+          size: 34.76,
+          path: 'my-photo/small_bird.jpeg',
+        },
+      },
+    });
   });
 
   test('Download image from sftp', async () => {
     await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird.jpeg');
 
-    return expect(Storage.defaultDisk.get('bird-images/bird.jpeg')).resolves.toBeTruthy();
+    return expect(Storage.get('bird-images/bird.jpeg')).resolves.toBeTruthy();
   });
 
   // test('Delete image from sftp', async () => {
@@ -52,14 +84,16 @@ describe('Sftp Disk test', () => {
     return expect(Storage.defaultDisk.exists('bird-images/bird.jpeg')).resolves.toEqual(true);
   });
 
-  test('File is not exists', async () => {
+  test('Check file is not exists', () => {
     return expect(Storage.disk('sftp-test').exists('not-exists.jpeg')).resolves.toEqual(false);
   });
 
+  test('Get file not exists', () => {
+    return expect(Storage.get('my-file/not-exists.jpeg')).rejects.toThrowError(FileNotFoundError);
+  });
+
   test('Get file size', async () => {
-    const fileReadStream2 = fs.createReadStream(
-      getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-    );
+    const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sftp-test').put(fileReadStream2, 'file-size/bird.jpeg');
 
     return expect(Storage.defaultDisk.size('file-size/bird.jpeg')).resolves.toEqual(56199);

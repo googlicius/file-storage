@@ -25,12 +25,9 @@
     "test": "jest",
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
-  "dependencies": {
-    "@file-storage/common": "^1.1.0"
-  },
   "devDependencies": {
+    "@file-storage/common": "^1.1.0",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
-  },
-  "gitHead": "c833ff5b47a5374c0b07351e8008c88cd3e7e3e3"
+  }
 }

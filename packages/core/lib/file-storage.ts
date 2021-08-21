@@ -6,15 +6,11 @@ import {
   requireDefaultModule,
   LocalDiskConfig,
   Class,
+  Plugin,
 } from '@file-storage/common';
 import { BuitInDiskConfig, StorageConfiguration } from './types';
 
-const S3Driver = requireDefaultModule('@file-storage/s3');
-const FtpDriver = requireDefaultModule('@file-storage/ftp');
-const LocalDriver = requireDefaultModule('@file-storage/local');
-const SftpDriver = requireDefaultModule('@file-storage/sftp');
-
-let configableDefaultDriverName = 'local';
+let configableDefaultDiskName = 'local';
 
 const defaultDiskConfig: LocalDiskConfig = {
   driver: DriverName.LOCAL,
@@ -25,7 +21,16 @@ const defaultDiskConfig: LocalDiskConfig = {
 
 let availableDisks: (DiskConfig | BuitInDiskConfig)[] = [defaultDiskConfig];
 
-const drivers: Class<Driver>[] = [S3Driver, LocalDriver, FtpDriver, SftpDriver];
+const drivers: Class<Driver>[] = [
+  requireDefaultModule('@file-storage/s3'),
+  requireDefaultModule('@file-storage/ftp'),
+  requireDefaultModule('@file-storage/local'),
+  requireDefaultModule('@file-storage/sftp'),
+];
+
+const plugins: Class<Plugin>[] = [requireDefaultModule('@file-storage/image-manipulation')].filter(
+  (item) => !!item,
+);
 
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
@@ -61,19 +66,19 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   // Set default disk.
   for (const diskConfig of availableDisks) {
     if (diskConfig.isDefault) {
-      configableDefaultDriverName = diskConfig.name;
+      configableDefaultDiskName = diskConfig.name;
       break;
     }
   }
 }
 
-function addCustomDriver(map: Class<Driver>[] = []) {
-  if (map.length > 0) {
-    drivers.push(...map);
+function addCustomDriver(customDrivers: Class<Driver>[] = []) {
+  if (customDrivers.length > 0) {
+    drivers.push(...customDrivers);
   }
 }
 
-function getDisk<U extends Driver>(diskName: string = configableDefaultDriverName): U {
+function getDisk<U extends Driver>(diskName: string = configableDefaultDiskName): U {
   const diskConfig = availableDisks.find((item) => item.name === diskName);
 
   if (!diskConfig) {
@@ -84,6 +89,7 @@ function getDisk<U extends Driver>(diskName: string = configableDefaultDriverNam
     const driver = drivers.find((item) => item['driverName'] === diskConfig.driver);
     return new driver(diskConfig) as U;
   } catch (error) {
+    // Throw error missing bult-in driver package.
     if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
       throw new Error(
         `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
@@ -100,15 +106,33 @@ class StorageClass implements Driver {
   /**
    * Get default disk instance.
    */
-  defaultDisk: Driver = getDisk(configableDefaultDriverName);
+  defaultDisk: Driver;
+
+  /**
+   * All plugin instances.
+   */
+  private pluginInstances: Plugin[];
+
+  constructor(diskName = configableDefaultDiskName) {
+    this.initialize(diskName);
+  }
 
   get name() {
     return this.defaultDisk.name;
   }
 
-  // get driver() {
-  //   return this.defaultDisk.driver;
-  // }
+  /**
+   * Initialize a storage.
+   */
+  private initialize(diskName = configableDefaultDiskName) {
+    this.defaultDisk = getDisk(diskName);
+
+    this.pluginInstances = plugins.map((pluginClass) => {
+      const plugin = new pluginClass();
+      plugin.init(this.defaultDisk);
+      return plugin;
+    });
+  }
 
   /**
    * Config for storage methods supported in the application.
@@ -119,18 +143,20 @@ class StorageClass implements Driver {
     addCustomDriver(customDrivers);
     handleDiskConfigs(diskConfigs);
 
-    this.defaultDisk = getDisk(configableDefaultDriverName);
+    this.initialize(configableDefaultDiskName);
   }
 
   /**
    * Get disk instance by diskName.
+   *
+   * @param diskName Disk name.
+   * @param asStorage Return a storage instance.
    */
-  disk<U extends Driver>(diskName?: string): U {
-    if (!diskName) {
-      return this.defaultDisk as U;
-    }
+  disk<U extends Driver>(diskName: string): U;
+  disk(diskName: string, asStorage: true): StorageClass;
 
-    return getDisk<U>(diskName);
+  disk(diskName: string, asStorage = false) {
+    return asStorage ? new StorageClass(diskName) : getDisk(diskName);
   }
 
   url(path: string) {
@@ -149,8 +175,21 @@ class StorageClass implements Driver {
     return this.defaultDisk.lastModified(path);
   }
 
-  put(stream: Stream, path: string): Promise<any> {
-    return this.defaultDisk.put(stream, path);
+  async put(data: Stream | Buffer, path: string): Promise<any> {
+    let result: { [x: string]: any } = {};
+
+    const putData = await this.defaultDisk.put(data, path);
+
+    result = Object.assign({}, result, putData);
+
+    for (const plugin of this.pluginInstances) {
+      if (plugin.afterPutKey && plugin.afterPut) {
+        const afterPutData = await plugin.afterPut(path);
+        result[plugin.afterPutKey] = afterPutData;
+      }
+    }
+
+    return result;
   }
 
   get(path: string): Stream | Promise<Stream> {
@@ -161,6 +200,14 @@ class StorageClass implements Driver {
     return this.defaultDisk.delete(path);
   }
 
+  makeDir(dir: string): Promise<string> {
+    return this.defaultDisk.makeDir(dir);
+  }
+
+  removeDir(dir: string): Promise<string> {
+    return this.defaultDisk.removeDir(dir);
+  }
+
   uploadImageFromExternalUri(
     uri: string,
     path: string,
@@ -169,12 +216,8 @@ class StorageClass implements Driver {
     return this.defaultDisk.uploadImageFromExternalUri(uri, path, ignoreHeaderContentType);
   }
 
-  makeDir(dir: string): Promise<string> {
-    return this.defaultDisk.makeDir(dir);
-  }
-
-  removeDir(dir: string): Promise<string> {
-    return this.defaultDisk.removeDir(dir);
+  imageStats(path: string) {
+    return this.defaultDisk.imageStats(path);
   }
 }
 

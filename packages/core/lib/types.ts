@@ -20,3 +20,10 @@ export interface StorageConfiguration<T extends DiskConfig> {
    */
   customDrivers?: Class<Driver>[];
 }
+
+// export interface GetDiskOptions {
+//   /**
+//    * Return a storage instance.
+//    */
+//   asStorage?: boolean;
+// }

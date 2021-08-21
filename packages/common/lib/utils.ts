@@ -11,18 +11,38 @@ export const ensureDirectoryExistence = (filePath: string) => {
 };
 
 /**
- * Convert data to stream if it is a buffer.
+ * Convert data to stream if it is a buffer or string.
  */
-export function toStream(data: Stream | Buffer): Stream {
-  if (Buffer.isBuffer(data)) {
-    return new Readable({
-      read() {
-        this.push(data);
-      },
-    });
+export function toStream(buf: Buffer | Stream | string, chunkSize?: number) {
+  if (typeof buf === 'string') {
+    buf = Buffer.from(buf, 'utf8');
+  }
+  if (!Buffer.isBuffer(buf)) {
+    return buf;
   }
 
-  return data;
+  const reader = new Readable();
+  const hwm = reader.readableHighWaterMark;
+
+  // If chunkSize is invalid, set to highWaterMark.
+  if (!chunkSize || typeof chunkSize !== 'number' || chunkSize < 1 || chunkSize > hwm) {
+    chunkSize = hwm;
+  }
+
+  const len = buf.length;
+  let start = 0;
+
+  // Overwrite _read method to push data from buffer.
+  reader._read = function () {
+    while (reader.push((<Buffer>buf).slice(start, (start += chunkSize)))) {
+      // If all data pushed, just break the loop.
+      if (start >= len) {
+        reader.push(null);
+        break;
+      }
+    }
+  };
+  return reader;
 }
 
 /**
@@ -67,3 +87,23 @@ export function getRootCwd() {
   }
   return cwd;
 }
+
+export async function streamToBuffer(stream: Stream): Promise<Buffer> {
+  return new Promise<Buffer>((resolve, reject) => {
+    const _buf = Array<any>();
+
+    stream.on('data', (chunk) => {
+      _buf.push(chunk);
+    });
+    stream.on('end', () => {
+      resolve(Buffer.concat(_buf));
+    });
+    stream.on('error', (err) => reject(`error converting stream - ${err}`));
+  });
+}
+
+export function getExt(filepath: string) {
+  return filepath.split('?')[0].split('#')[0].split('.').pop();
+}
+
+export const bytesToKbytes = (bytes: number) => Math.round((bytes / 1000) * 100) / 100;

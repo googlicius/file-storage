@@ -1,7 +1,7 @@
 import { AccessOptions, Client, FileInfo, FTPResponse } from 'basic-ftp';
 import { dirname } from 'path';
 import { PassThrough, Readable, Stream } from 'stream';
-import { Driver, DriverName, FtpDiskConfig } from '@file-storage/common';
+import { Driver, DriverName, FtpDiskConfig, PutResult, toStream } from '@file-storage/common';
 
 export class FtpDriver extends Driver {
   static readonly driverName = DriverName.FTP;
@@ -73,13 +73,21 @@ export class FtpDriver extends Driver {
     return date.getTime();
   }
 
-  async put(stream: Readable, path: string): Promise<FTPResponse> {
+  async put(data: Readable | Buffer, path: string): Promise<PutResult & FTPResponse> {
     await this.connectToFTPServer();
     await this.ensureDirectoryExistence(this.rootPath(path));
 
-    return this.client.uploadFrom(stream, this.rootPath(path)).finally(() => {
-      this.client.close();
-    });
+    return this.client
+      .uploadFrom(toStream(data) as Readable, this.rootPath(path))
+      .then((result) => {
+        return {
+          success: true,
+          ...result,
+        };
+      })
+      .finally(() => {
+        this.client.close();
+      });
   }
 
   async get(path: string): Promise<Stream> {

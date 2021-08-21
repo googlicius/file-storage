@@ -6,7 +6,9 @@ import {
   DriverName,
   ensureDirectoryExistence,
   exists,
+  FileNotFoundError,
   LocalDiskConfig,
+  PutResult,
   toStream,
 } from '@file-storage/common';
 
@@ -22,6 +24,13 @@ export class LocalDriver extends Driver {
 
   private rootPath(path: string): string {
     return this.root + '/' + path;
+  }
+
+  protected errorHandler(error: any) {
+    if (error.code === 'ENOENT') {
+      throw new FileNotFoundError(error.message);
+    }
+    throw error;
   }
 
   url(path: string): string {
@@ -61,15 +70,18 @@ export class LocalDriver extends Driver {
     });
   }
 
-  put(data: Stream | Buffer, path: string) {
+  put(data: Stream | Buffer, path: string): Promise<PutResult> {
     ensureDirectoryExistence(this.rootPath(path));
     const writeStream = fs.createWriteStream(this.rootPath(path));
 
     toStream(data).pipe(writeStream);
 
-    return new Promise<string>((resole, reject) => {
+    return new Promise<PutResult>((resole, reject) => {
       writeStream.on('close', () => {
-        resole('Uploading success!');
+        resole({
+          success: true,
+          message: 'Uploading success!',
+        });
       });
       writeStream.on('error', (error) => {
         reject(error);

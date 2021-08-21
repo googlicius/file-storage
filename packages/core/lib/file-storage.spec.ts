@@ -8,30 +8,30 @@ describe('Storage test', () => {
       Storage.config();
     });
 
-    const fileReadStream = fs.createReadStream(
-      getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-    );
-
     test('Default disk is local if there is no diskType specific.', () => {
       expect(Storage.defaultDisk.name).toEqual('local');
     });
 
     test('Upload image to local success.', () => {
+      const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
       return expect(
         Storage.defaultDisk.put(fileReadStream, 'test_upload/bird.jpeg'),
-      ).resolves.toEqual('Uploading success!');
+      ).resolves.toMatchObject({
+        success: true,
+        message: 'Uploading success!',
+      });
     });
   });
 
   describe('Storage as a disk test', () => {
-    const fileReadStream = fs.createReadStream(
-      getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-    );
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
 
-    test('Upload image to local disk', () => {
-      expect(Storage.put(fileReadStream, 'test_upload/bird.jpeg')).resolves.toEqual(
-        'Uploading success!',
-      );
+    test('Upload image to local disk', async () => {
+      const result = await Storage.put(fileReadStream, 'test_upload/bird.jpeg');
+      expect(result).toMatchObject({
+        success: true,
+        message: 'Uploading success!',
+      });
     });
   });
 

@@ -7,7 +7,15 @@ import S3, {
 import { AWSError } from 'aws-sdk/lib/error';
 import { PromiseResult } from 'aws-sdk/lib/request';
 import { PassThrough, Stream } from 'stream';
-import { Driver, DriverName, S3DiskConfig } from '@file-storage/common';
+import {
+  Driver,
+  DriverName,
+  FileNotFoundError,
+  PutResult,
+  S3DiskConfig,
+  toStream,
+  UnauthenticatedError,
+} from '@file-storage/common';
 
 export class S3Driver extends Driver {
   private bucketName: string;
@@ -24,6 +32,19 @@ export class S3Driver extends Driver {
     this.bucketName = bucketName;
     this.publicUrl = publicUrl;
     this.s3Instance = new S3(clientConfig);
+  }
+
+  protected errorHandler(error: any) {
+    switch (error.code) {
+      case 'CredentialsError':
+        throw new UnauthenticatedError(error.message);
+
+      case 'NotFound':
+        throw new FileNotFoundError(error.message);
+
+      default:
+        throw error;
+    }
   }
 
   url(path: string): string {
@@ -67,7 +88,12 @@ export class S3Driver extends Driver {
   /**
    * Upload to S3.
    */
-  put(Body: Stream | PassThrough, Key: string, params?: Partial<PutObjectRequest>) {
+  put(
+    data: Stream | PassThrough | Buffer,
+    Key: string,
+    params?: Partial<PutResult & PutObjectRequest>,
+  ) {
+    const Body = toStream(data);
     const putParams: PutObjectRequest = {
       Bucket: this.bucketName,
       Key,
@@ -84,7 +110,14 @@ export class S3Driver extends Driver {
       putParams.Body = passThrough;
     }
 
-    return this.s3Instance.upload(putParams).promise();
+    return this.s3Instance
+      .upload(putParams)
+      .promise()
+      .then((result) => ({
+        success: true,
+        message: 'Uploading success!',
+        ...result,
+      }));
   }
 
   /**

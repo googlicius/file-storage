@@ -6,4 +6,4 @@ _|    _|_|\___|_____/ \__|\___/ _|  \__,_|\__, |\___|
 A file system abstraction for Node.js     |___/
 ```
 
-Common utilities, types, interfaces,... for `file-storage`.
+Local driver for `file-storage`

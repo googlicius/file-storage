@@ -1,3 +1,6 @@
+/**
+ * Supported driver name.
+ */
 export enum DriverName {
   LOCAL = 'local',
   S3 = 's3',

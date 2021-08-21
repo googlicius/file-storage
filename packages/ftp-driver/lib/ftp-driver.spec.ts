@@ -21,36 +21,93 @@ describe('FTP Disk test', () => {
     });
   });
 
-  const fileReadStream = fs.createReadStream(
-    getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-  );
-
   test('Default disk is sammy', () => {
     expect(Storage.defaultDisk.name).toEqual('sammy');
     expect(Storage.name).toEqual('sammy');
   });
 
   test('Upload image to ftp', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(Storage.disk('sammy').put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
+      success: true,
       code: 226,
       message: '226 Transfer complete.',
     });
   });
 
-  test('Upload using Storage facade', () => {
+  test('Upload ftp using Storage facade', () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(Storage.put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
+      success: true,
       code: 226,
       message: '226 Transfer complete.',
+    });
+  });
+
+  test('Upload ftp large image will uploaded to many formats', () => {
+    const imageFileStream = fs.createReadStream(
+      getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
+    );
+    return expect(
+      Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
+    ).resolves.toMatchObject({
+      success: true,
+      code: 226,
+      message: '226 Transfer complete.',
+      formats: {
+        thumbnail: {
+          name: 'thumbnail_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 208,
+          height: 156,
+          size: 15.9,
+          path: 'my-photo/thumbnail_photo-1000x750.jpeg',
+        },
+        large: {
+          name: 'large_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 1000,
+          height: 750,
+          size: 184.49,
+          path: 'my-photo/large_photo-1000x750.jpeg',
+        },
+        medium: {
+          name: 'medium_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 750,
+          height: 562,
+          size: 105.12,
+          path: 'my-photo/medium_photo-1000x750.jpeg',
+        },
+        small: {
+          name: 'small_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 500,
+          height: 375,
+          size: 52.33,
+          path: 'my-photo/small_photo-1000x750.jpeg',
+        },
+      },
     });
   });
 
   test('Download image from ftp', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
     return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
   });
 
   test('Delete image from ftp', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
     return expect(Storage.disk('sammy').delete('test_upload/bird.jpeg')).resolves.toMatchObject({
@@ -60,6 +117,7 @@ describe('FTP Disk test', () => {
   });
 
   test('File is exists', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
     return expect(Storage.exists('test_upload/bird.jpeg')).resolves.toEqual(true);
@@ -70,15 +128,14 @@ describe('FTP Disk test', () => {
   });
 
   test('Get file size', async () => {
-    const fileReadStream2 = fs.createReadStream(
-      getRootCwd() + '/test/support/images/0266554465-1528092757338.jpeg',
-    );
+    const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream2, 'bird-images/bird.jpeg');
 
     return expect(Storage.defaultDisk.size('bird-images/bird.jpeg')).resolves.toEqual(56199);
   });
 
   test('Last modified', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'bird-images/bird2.jpeg');
     const lastMod = await Storage.defaultDisk.lastModified('bird-images/bird2.jpeg');
     expect(typeof lastMod).toBe('number');

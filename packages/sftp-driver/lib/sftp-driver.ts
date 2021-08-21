@@ -2,13 +2,21 @@ import { Readable, PassThrough } from 'stream';
 import { dirname } from 'path';
 import { ReadStream } from 'fs';
 import Client from 'ssh2-sftp-client';
-import { AnyObject, Driver, DriverName, SftpDiskConfig } from '@file-storage/common';
+import {
+  AnyObject,
+  Driver,
+  DriverName,
+  FileNotFoundError,
+  PutResult,
+  SftpDiskConfig,
+} from '@file-storage/common';
 
 export class SftpDriver extends Driver {
   static readonly driverName = DriverName.SFTP;
   readonly client: Client;
   private root: string;
   private accessOptions: AnyObject;
+  private timeOutToCloseConnection: NodeJS.Timeout;
 
   constructor(config: SftpDiskConfig) {
     super(config);
@@ -18,8 +26,34 @@ export class SftpDriver extends Driver {
     this.client = new Client();
   }
 
+  protected errorHandler(error: any) {
+    switch (error.code) {
+      case 2:
+      case 4:
+        throw new FileNotFoundError(error.message);
+
+      default:
+        throw error;
+    }
+  }
+
   private connectToSftpServer(): Promise<any> {
-    return this.client.connect(this.accessOptions);
+    clearTimeout(this.timeOutToCloseConnection);
+    if (!this.client.sftp) {
+      return this.client.connect(this.accessOptions);
+    }
+  }
+
+  /**
+   * Close connection after 0.5s, if there is another request, this timeout will be cleared,
+   * and the connection will be keep open.
+   */
+  private closeConnection() {
+    this.timeOutToCloseConnection = setTimeout(() => {
+      if (this.client.sftp) {
+        this.client.end();
+      }
+    }, 500);
   }
 
   private rootPath(path: string): string {
@@ -41,7 +75,7 @@ export class SftpDriver extends Driver {
   private async clientFunc(name: string, ...args: any[]): Promise<any> {
     await this.connectToSftpServer();
     return this.client[name](...args).finally(() => {
-      this.client.end();
+      this.closeConnection();
     });
   }
 
@@ -64,13 +98,19 @@ export class SftpDriver extends Driver {
     return data.modifyTime;
   }
 
-  async put(src: Readable, path: string) {
+  async put(src: Readable, path: string): Promise<PutResult> {
     await this.connectToSftpServer();
     await this.ensureDirectoryExistence(this.rootPath(path));
 
-    return this.client.put(src, this.rootPath(path)).finally(() => {
-      this.client.end();
-    });
+    return this.client
+      .put(src, this.rootPath(path))
+      .then(() => ({
+        success: true,
+        message: 'Uploading success!',
+      }))
+      .finally(() => {
+        this.closeConnection();
+      });
   }
 
   get(path: string): Promise<ReadStream> {
