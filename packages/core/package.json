@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/core",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "> TODO: description",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -26,10 +26,10 @@
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "@file-storage/local": "^1.1.0"
+    "@file-storage/local": "^1.1.1"
   },
   "devDependencies": {
-    "@file-storage/common": "^1.1.0",
+    "@file-storage/common": "^1.1.1",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
   }
