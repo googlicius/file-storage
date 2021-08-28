@@ -91,7 +91,7 @@ function getDisk<U extends Driver>(diskName: string = configableDefaultDiskName)
   }
 
   try {
-    const driver = drivers.find((item) => item['driverName'] === diskConfig.driver);
+    const driver = drivers.find((item) => item && item['driverName'] === diskConfig.driver);
     return new driver(diskConfig) as U;
   } catch (error) {
     // Throw error missing bult-in driver package.
