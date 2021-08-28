@@ -57,7 +57,7 @@ describe('S3 Disk test', () => {
   });
 
   test('Default disk is s3Default', () => {
-    expect(Storage.defaultDisk.name).toEqual('s3Default');
+    expect(Storage.name).toEqual('s3Default');
   });
 
   test('Disk name is s3Test', () => {
@@ -65,7 +65,7 @@ describe('S3 Disk test', () => {
   });
 
   // test('Default disk does not have any bucket', async () => {
-  //   const bucketListResult = await (Storage.defaultDisk as S3Driver).s3Instance
+  //   const bucketListResult = await (Storage as S3Driver).s3Instance
   //     .listBuckets()
   //     .promise();
 
@@ -173,8 +173,8 @@ describe('S3 Disk test', () => {
 
   test('Download image from s3', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-    await Storage.defaultDisk.put(fileReadStream, 'test_upload/bird2.jpeg');
-    return expect(Storage.defaultDisk.get('test_upload/bird2.jpeg')).resolves.toBeTruthy();
+    await Storage.put(fileReadStream, 'test_upload/bird2.jpeg');
+    return expect(Storage.get('test_upload/bird2.jpeg')).resolves.toBeTruthy();
   });
 
   test('Download not exists image from s3 error', async () => {
@@ -186,14 +186,14 @@ describe('S3 Disk test', () => {
   test('Delete image from s3 bucket (Using default disk)', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     const filePath = 'test_upload/image123.jpeg';
-    await Storage.defaultDisk.put(fileReadStream, filePath);
+    await Storage.put(fileReadStream, filePath);
 
-    return expect(Storage.defaultDisk.delete(filePath)).resolves.toBeTruthy();
+    return expect(Storage.delete(filePath)).resolves.toBeTruthy();
   });
 
   test('Upload to another bucket', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-    const s3Disk = <S3Driver>Storage.defaultDisk;
+    const s3Disk = <S3Driver>Storage.disk();
     await s3Disk.setupMockS3('another-bucket');
 
     return expect(
@@ -212,7 +212,7 @@ describe('S3 Disk test', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('s3Default').put(fileReadStream, 'bird-images/bird.jpeg');
 
-    return expect(Storage.defaultDisk.exists('bird-images/bird.jpeg')).resolves.toEqual(true);
+    return expect(Storage.exists('bird-images/bird.jpeg')).resolves.toEqual(true);
   });
 
   test('File is not exists', async () => {
@@ -226,13 +226,13 @@ describe('S3 Disk test', () => {
     const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('s3Default').put(fileReadStream2, 'bird-images/bird-size.jpeg');
 
-    return expect(Storage.defaultDisk.size('bird-images/bird-size.jpeg')).resolves.toEqual(56199);
+    return expect(Storage.size('bird-images/bird-size.jpeg')).resolves.toEqual(56199);
   });
 
   test('Last modified', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('s3Default').put(fileReadStream, 'bird-images/bird.jpeg');
-    const lastMod = await Storage.defaultDisk.lastModified('bird-images/bird.jpeg');
+    const lastMod = await Storage.lastModified('bird-images/bird.jpeg');
     const lastMod2 = await Storage.lastModified('bird-images/bird.jpeg');
     expect(typeof lastMod).toBe('number');
     expect(typeof lastMod2).toBe('number');

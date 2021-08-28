@@ -3,7 +3,7 @@ import sharp from 'sharp';
 import { DriverName } from './enums/driver-name.enum';
 import { DiskConfig } from './types/disk-config.interface';
 import { ImageStats } from './types/image-stats.interface';
-import { bytesToKbytes, getExt, streamToBuffer } from './utils';
+import { bytesToKbytes, getExt, getFileName, streamToBuffer } from './utils';
 import { PutResult } from './types/put-result.interface';
 
 const request = require('request');
@@ -64,7 +64,7 @@ export abstract class Driver {
    * @param path string
    * @throws If file doesn't exists.
    */
-  abstract put(data: Stream | Buffer, path: string): Promise<PutResult>;
+  abstract put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>>;
 
   /**
    * Get a file.
@@ -141,7 +141,7 @@ export abstract class Driver {
     const { format, size, width, height } = await sharp(buffer).metadata();
 
     return {
-      name: path.replace(/^.*[\\/]/, ''),
+      name: getFileName(path),
       path,
       size: bytesToKbytes(size),
       width,

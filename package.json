@@ -18,6 +18,7 @@
     "clean": "lerna run clean",
     "pub": "lerna publish",
     "test": "lerna run test",
+    "test:coverage": "lerna run test:coverage",
     "test:detectOpenHandles": "lerna run test:detectOpenHandles",
     "lint": "eslint --ext ts .",
     "prepare": "husky install"

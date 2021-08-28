@@ -73,7 +73,7 @@ export class FtpDriver extends Driver {
     return date.getTime();
   }
 
-  async put(data: Readable | Buffer, path: string): Promise<PutResult & FTPResponse> {
+  async put(data: Readable | Buffer, path: string): Promise<Partial<PutResult> & FTPResponse> {
     await this.connectToFTPServer();
     await this.ensureDirectoryExistence(this.rootPath(path));
 

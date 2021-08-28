@@ -70,13 +70,13 @@ export class LocalDriver extends Driver {
     });
   }
 
-  put(data: Stream | Buffer, path: string): Promise<PutResult> {
+  put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>> {
     ensureDirectoryExistence(this.rootPath(path));
     const writeStream = fs.createWriteStream(this.rootPath(path));
 
     toStream(data).pipe(writeStream);
 
-    return new Promise<PutResult>((resole, reject) => {
+    return new Promise((resole, reject) => {
       writeStream.on('close', () => {
         resole({
           success: true,

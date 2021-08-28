@@ -73,7 +73,7 @@ describe('Sftp Disk test', () => {
   // test('Delete image from sftp', async () => {
   //   await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird-delete.jpeg');
 
-  //   return expect(Storage.defaultDisk.delete('bird-images/bird-delete.jpeg')).resolves.toEqual(
+  //   return expect(Storage.delete('bird-images/bird-delete.jpeg')).resolves.toEqual(
   //     'Successfully deleted /upload/bird-images/bird-delete.jpeg',
   //   );
   // });
@@ -81,7 +81,7 @@ describe('Sftp Disk test', () => {
   test('File is exists', async () => {
     await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird.jpeg');
 
-    return expect(Storage.defaultDisk.exists('bird-images/bird.jpeg')).resolves.toEqual(true);
+    return expect(Storage.exists('bird-images/bird.jpeg')).resolves.toEqual(true);
   });
 
   test('Check file is not exists', () => {
@@ -96,12 +96,12 @@ describe('Sftp Disk test', () => {
     const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sftp-test').put(fileReadStream2, 'file-size/bird.jpeg');
 
-    return expect(Storage.defaultDisk.size('file-size/bird.jpeg')).resolves.toEqual(56199);
+    return expect(Storage.size('file-size/bird.jpeg')).resolves.toEqual(56199);
   });
 
   test('Last modified', async () => {
     await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird.jpeg');
-    const lastMod = await Storage.defaultDisk.lastModified('bird-images/bird.jpeg');
+    const lastMod = await Storage.lastModified('bird-images/bird.jpeg');
     expect(typeof lastMod).toBe('number');
   });
 });

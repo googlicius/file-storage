@@ -2,12 +2,13 @@ import {
   Class,
   DiskConfig,
   Driver,
+  FtpDiskConfig,
   LocalDiskConfig,
   S3DiskConfig,
   SftpDiskConfig,
 } from '@file-storage/common';
 
-export type BuitInDiskConfig = LocalDiskConfig | S3DiskConfig | SftpDiskConfig;
+export type BuitInDiskConfig = LocalDiskConfig | S3DiskConfig | SftpDiskConfig | FtpDiskConfig;
 
 export interface StorageConfiguration<T extends DiskConfig> {
   /**
@@ -19,6 +20,11 @@ export interface StorageConfiguration<T extends DiskConfig> {
    * Add one or more your custom drivers.
    */
   customDrivers?: Class<Driver>[];
+
+  /**
+   * Enable unique file name.
+   */
+  uniqueFileName?: boolean;
 }
 
 // export interface GetDiskOptions {

@@ -98,7 +98,7 @@ export class SftpDriver extends Driver {
     return data.modifyTime;
   }
 
-  async put(src: Readable, path: string): Promise<PutResult> {
+  async put(src: Readable, path: string): Promise<Partial<PutResult>> {
     await this.connectToSftpServer();
     await this.ensureDirectoryExistence(this.rootPath(path));
 

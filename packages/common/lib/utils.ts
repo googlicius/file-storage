@@ -106,4 +106,14 @@ export function getExt(filepath: string) {
   return filepath.split('?')[0].split('#')[0].split('.').pop();
 }
 
+/**
+ * Get file name frome give path.
+ */
+export function getFileName(filePath: string) {
+  return filePath
+    .split('?')[0]
+    .split('#')[0]
+    .replace(/^.*[\\/]/, '');
+}
+
 export const bytesToKbytes = (bytes: number) => Math.round((bytes / 1000) * 100) / 100;

@@ -22,7 +22,6 @@ describe('FTP Disk test', () => {
   });
 
   test('Default disk is sammy', () => {
-    expect(Storage.defaultDisk.name).toEqual('sammy');
     expect(Storage.name).toEqual('sammy');
   });
 
@@ -37,10 +36,12 @@ describe('FTP Disk test', () => {
 
   test('Upload ftp using Storage facade', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-    return expect(Storage.put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
+    return expect(Storage.put(fileReadStream, 'path/to/bird.jpeg')).resolves.toMatchObject({
       success: true,
       code: 226,
       message: '226 Transfer complete.',
+      name: 'bird.jpeg',
+      path: 'path/to/bird.jpeg',
     });
   });
 
@@ -54,6 +55,8 @@ describe('FTP Disk test', () => {
       success: true,
       code: 226,
       message: '226 Transfer complete.',
+      name: 'photo-1000x750.jpeg',
+      path: 'my-photo/photo-1000x750.jpeg',
       formats: {
         thumbnail: {
           name: 'thumbnail_photo-1000x750.jpeg',
@@ -131,13 +134,13 @@ describe('FTP Disk test', () => {
     const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream2, 'bird-images/bird.jpeg');
 
-    return expect(Storage.defaultDisk.size('bird-images/bird.jpeg')).resolves.toEqual(56199);
+    return expect(Storage.size('bird-images/bird.jpeg')).resolves.toEqual(56199);
   });
 
   test('Last modified', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'bird-images/bird2.jpeg');
-    const lastMod = await Storage.defaultDisk.lastModified('bird-images/bird2.jpeg');
+    const lastMod = await Storage.lastModified('bird-images/bird2.jpeg');
     expect(typeof lastMod).toBe('number');
   });
 });

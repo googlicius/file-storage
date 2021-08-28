@@ -7,8 +7,13 @@ import {
   LocalDiskConfig,
   Class,
   Plugin,
+  getExt,
+  PutResult,
+  getFileName,
 } from '@file-storage/common';
 import { BuitInDiskConfig, StorageConfiguration } from './types';
+import { v4 as uuidv4 } from 'uuid';
+import { dirname } from 'path';
 
 let configableDefaultDiskName = 'local';
 
@@ -99,19 +104,18 @@ function getDisk<U extends Driver>(diskName: string = configableDefaultDiskName)
   }
 }
 
-/**
- * `Storage` provides a filesystem abstraction, simple way to uses drivers for working with local filesystems, Amazon S3,...
- */
 class StorageClass implements Driver {
   /**
    * Get default disk instance.
    */
-  defaultDisk: Driver;
+  private defaultDisk: Driver;
 
   /**
    * All plugin instances.
    */
   private pluginInstances: Plugin[];
+
+  private uniqueFileName = false;
 
   constructor(diskName = configableDefaultDiskName) {
     this.initialize(diskName);
@@ -138,10 +142,12 @@ class StorageClass implements Driver {
    * Config for storage methods supported in the application.
    */
   config<U extends DiskConfig = BuitInDiskConfig>(options: StorageConfiguration<U> = {}) {
-    const { diskConfigs = [], customDrivers = [] } = options;
+    const { diskConfigs = [], customDrivers = [], uniqueFileName = false } = options;
 
     addCustomDriver(customDrivers);
     handleDiskConfigs(diskConfigs);
+
+    this.uniqueFileName = uniqueFileName;
 
     this.initialize(configableDefaultDiskName);
   }
@@ -152,10 +158,13 @@ class StorageClass implements Driver {
    * @param diskName Disk name.
    * @param asStorage Return a storage instance.
    */
-  disk<U extends Driver>(diskName: string): U;
+  disk<U extends Driver>(diskName?: string): U;
   disk(diskName: string, asStorage: true): StorageClass;
 
-  disk(diskName: string, asStorage = false) {
+  disk(diskName?: string, asStorage = false) {
+    if (!diskName) {
+      return this.defaultDisk;
+    }
     return asStorage ? new StorageClass(diskName) : getDisk(diskName);
   }
 
@@ -175,16 +184,25 @@ class StorageClass implements Driver {
     return this.defaultDisk.lastModified(path);
   }
 
-  async put(data: Stream | Buffer, path: string): Promise<any> {
-    let result: { [x: string]: any } = {};
+  async put(data: Stream | Buffer, path: string): Promise<PutResult> {
+    let result: PutResult = {
+      success: true,
+      message: 'Uploading success',
+      name: getFileName(path),
+      path,
+    };
 
-    const putData = await this.defaultDisk.put(data, path);
+    if (this.uniqueFileName) {
+      result.path = dirname(path) + '/' + uuidv4() + '.' + getExt(path);
+    }
+
+    const putData = await this.defaultDisk.put(data, result.path);
 
     result = Object.assign({}, result, putData);
 
     for (const plugin of this.pluginInstances) {
       if (plugin.afterPutKey && plugin.afterPut) {
-        const afterPutData = await plugin.afterPut(path);
+        const afterPutData = await plugin.afterPut(result.path);
         result[plugin.afterPutKey] = afterPutData;
       }
     }
@@ -221,4 +239,7 @@ class StorageClass implements Driver {
   }
 }
 
+/**
+ * `Storage` provides a filesystem abstraction, simple way to uses drivers for working with local filesystems, Amazon S3,...
+ */
 export const Storage = new StorageClass();

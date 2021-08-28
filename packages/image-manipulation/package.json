@@ -23,6 +23,7 @@
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
