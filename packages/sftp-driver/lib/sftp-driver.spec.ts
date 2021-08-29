@@ -9,7 +9,6 @@ describe('Sftp Disk test', () => {
         {
           driver: DriverName.SFTP,
           name: 'sftp-test',
-          isDefault: true,
           root: '/upload',
           accessOptions: {
             host: '127.0.0.1',

@@ -14,6 +14,7 @@ describe('S3 Disk test', () => {
 
   beforeAll(async () => {
     Storage.config({
+      defaultDiskName: 's3Default',
       diskConfigs: [
         {
           driver: DriverName.S3,
@@ -31,7 +32,6 @@ describe('S3 Disk test', () => {
           driver: DriverName.S3,
           name: 's3Default',
           bucketName: bucketName2,
-          isDefault: true,
           endpoint: 'http://localhost:4566',
           s3ForcePathStyle: true,
           region: 'us-east-1',

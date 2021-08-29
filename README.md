@@ -47,6 +47,8 @@ import Storage from '@file-storage/core';
 import { DriverName } from '@file-storage/common';
 
 Storage.config({
+  // Default disk that you can access directly via Storage facade.
+  defaultDiskName: 'mys3',
   diskConfigs: [
     {
       driver: DriverName.LOCAL,
@@ -57,7 +59,6 @@ Storage.config({
       driver: DriverName.S3,
       name: 'mys3',
       bucketName: 'mybucket',
-      isDefault: true, // Default disk that you can access directly via Storage facade.
       // Uncomment if you want specify credentials manually.
       // region: 'ap-southeast-1',
       // credentials: {
@@ -129,7 +130,6 @@ Storage.config<OneDriveConfig>({
     {
       driver: 'one_drive',
       name: 'myCustomDisk',
-      isDefault: true,
       ...
     }
   ],

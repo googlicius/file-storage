@@ -9,7 +9,6 @@ describe('FTP Disk test', () => {
         {
           driver: DriverName.FTP,
           name: 'sammy',
-          isDefault: true,
           root: '/upload',
           accessOptions: {
             host: '127.0.0.1',

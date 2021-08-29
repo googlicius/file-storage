@@ -12,6 +12,11 @@ export type BuitInDiskConfig = LocalDiskConfig | S3DiskConfig | SftpDiskConfig |
 
 export interface StorageConfiguration<T extends DiskConfig> {
   /**
+   * Default disk name.
+   */
+  defaultDiskName?: string;
+
+  /**
    * List of disks available in your application.
    */
   diskConfigs?: (T | BuitInDiskConfig)[];

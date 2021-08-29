@@ -3,6 +3,19 @@ import { Storage } from './file-storage';
 import { DriverName, getExt, getRootCwd } from '@file-storage/common';
 
 describe('Storage', () => {
+  test('Auto set default disk name when there is only one disk-config', () => {
+    Storage.config({
+      diskConfigs: [
+        {
+          driver: DriverName.LOCAL,
+          name: 'my-local',
+        },
+      ],
+    });
+
+    expect(Storage.name).toEqual('my-local');
+  });
+
   describe('Storage: No config specified.', () => {
     beforeAll(() => {
       Storage.config();
@@ -55,36 +68,15 @@ describe('Storage', () => {
   });
 
   describe('Storage: config errors.', () => {
-    test('Not allows more than one default disk.', () => {
-      expect(() =>
-        Storage.config({
-          diskConfigs: [
-            {
-              driver: DriverName.LOCAL,
-              name: 'local',
-              root: 'storage',
-              isDefault: true,
-            },
-            {
-              driver: DriverName.S3,
-              name: 's3Default',
-              bucketName: 'startover',
-              isDefault: true,
-            },
-          ],
-        }),
-      ).toThrowError('Not allows more than one default disk.');
-    });
-
     test('Duplicated disk name.', () => {
       expect(() =>
         Storage.config({
+          defaultDiskName: 'myDisk',
           diskConfigs: [
             {
               driver: DriverName.LOCAL,
               name: 'myDisk',
               root: 'storage',
-              isDefault: true,
             },
             {
               driver: DriverName.S3,
@@ -96,19 +88,54 @@ describe('Storage', () => {
       ).toThrowError('Duplicated disk name.');
     });
 
+    test('Please specify a default disk name.', () => {
+      expect(() =>
+        Storage.config({
+          diskConfigs: [
+            {
+              driver: DriverName.LOCAL,
+              name: 'myDisk',
+              root: 'storage',
+            },
+            {
+              driver: DriverName.S3,
+              name: 's3',
+              bucketName: 'startover',
+            },
+          ],
+        }),
+      ).toThrowError('Please specify a default disk name.');
+    });
+
     test('Driver is not declared', () => {
       expect(() => {
         Storage.config({
+          defaultDiskName: 'not-exists-disk',
           diskConfigs: [
             {
               driver: 'onedriver',
               name: 'not-exists-disk',
-              isDefault: true,
             },
           ],
         });
         Storage.disk('not-exists-disk');
       }).toThrowError(`Driver 'onedriver' is not declared.`);
+    });
+
+    test('Given disk is not defined', () => {
+      expect(() => {
+        Storage.config({
+          defaultDiskName: 'myDisk2',
+          diskConfigs: [
+            {
+              driver: DriverName.LOCAL,
+              name: 'myDisk',
+              root: 'storage',
+            },
+          ],
+        });
+        Storage.disk('not-exists-disk');
+      }).toThrowError('Given disk is not defined: myDisk2');
     });
 
     // TODO Able to test this case.
