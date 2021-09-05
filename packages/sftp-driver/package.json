@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/sftp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Sftp disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -33,7 +33,7 @@
     "@file-storage/core": "^1.0.0"
   },
   "devDependencies": {
-    "@file-storage/common": "^1.2.0",
+    "@file-storage/common": "^1.2.1",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
   }
