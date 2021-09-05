@@ -206,6 +206,14 @@ class StorageClass implements Driver {
     return this.defaultDisk.delete(path);
   }
 
+  copy(path: string, newPath: string): Promise<void> {
+    return this.defaultDisk.copy(path, newPath);
+  }
+
+  move(path: string, newPath: string) {
+    return this.defaultDisk.move(path, newPath);
+  }
+
   makeDir(dir: string): Promise<string> {
     return this.defaultDisk.makeDir(dir);
   }

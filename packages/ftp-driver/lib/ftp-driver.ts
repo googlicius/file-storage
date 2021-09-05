@@ -104,6 +104,17 @@ export class FtpDriver extends Driver {
     return this.clientFunc('remove', this.rootPath(path));
   }
 
+  async copy(path: string, newPath: string): Promise<void> {
+    const file = (await this.get(path)) as Readable;
+    await this.put(file, newPath);
+  }
+
+  async move(path: string, newPath: string): Promise<void> {
+    await this.connectToFTPServer();
+    await this.ensureDirectoryExistence(this.rootPath(newPath));
+    await this.clientFunc('rename', this.rootPath(path), this.rootPath(newPath));
+  }
+
   async makeDir(dir: string): Promise<string> {
     try {
       await this.clientFunc('cd', this.rootPath(dir));

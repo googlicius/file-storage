@@ -1,4 +1,5 @@
 import S3, {
+  CopyObjectRequest,
   DeleteObjectRequest,
   GetObjectRequest,
   HeadObjectRequest,
@@ -47,6 +48,14 @@ export class S3Driver extends Driver {
     }
   }
 
+  protected async stats(path: string) {
+    const getObjectParams: HeadObjectRequest = {
+      Key: path,
+      Bucket: this.bucketName,
+    };
+    return this.s3Instance.headObject(getObjectParams).promise();
+  }
+
   url(path: string): string {
     return this.publicUrl
       ? `${this.publicUrl}/${path}`
@@ -54,34 +63,19 @@ export class S3Driver extends Driver {
   }
 
   exists(path: string) {
-    const headObjectParams: HeadObjectRequest = {
-      Key: path,
-      Bucket: this.bucketName,
-    };
-    return this.s3Instance
-      .headObject(headObjectParams)
-      .promise()
-      .then(
-        () => true,
-        () => false,
-      );
+    return this.stats(path).then(
+      () => true,
+      () => false,
+    );
   }
 
   async size(path: string): Promise<number> {
-    const headObjectRequest: HeadObjectRequest = {
-      Key: path,
-      Bucket: this.bucketName,
-    };
-    const data = await this.s3Instance.headObject(headObjectRequest).promise();
+    const data = await this.stats(path);
     return data.ContentLength;
   }
 
   async lastModified(path: string): Promise<number> {
-    const headObjectRequest: HeadObjectRequest = {
-      Key: path,
-      Bucket: this.bucketName,
-    };
-    const data = await this.s3Instance.headObject(headObjectRequest).promise();
+    const data = await this.stats(path);
     return data.LastModified.getTime();
   }
 
@@ -133,6 +127,16 @@ export class S3Driver extends Driver {
     return this.s3Instance.getObject(getObjectParams).createReadStream();
   }
 
+  async copy(path: string, newPath: string): Promise<void> {
+    const copyObjectParams: CopyObjectRequest = {
+      CopySource: this.bucketName + '/' + path,
+      Key: newPath,
+      Bucket: this.bucketName,
+    };
+
+    await this.s3Instance.copyObject(copyObjectParams).promise();
+  }
+
   /**
    * Delete a file from s3 bucket.
    */
@@ -150,6 +154,11 @@ export class S3Driver extends Driver {
         }
       });
     });
+  }
+
+  async move(path: string, newPath: string): Promise<void> {
+    await this.copy(path, newPath);
+    await this.delete(path);
   }
 
   /**

@@ -33,6 +33,17 @@ export class LocalDriver extends Driver {
     throw error;
   }
 
+  protected async stats(path: string): Promise<fs.Stats> {
+    return new Promise((resolve, reject) => {
+      fs.stat(this.rootPath(path), (err, stats) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(stats);
+      });
+    });
+  }
+
   url(path: string): string {
     return `${process.env.APP_URL}/${path}`;
   }
@@ -46,28 +57,14 @@ export class LocalDriver extends Driver {
     }
   }
 
-  size(path: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      fs.stat(this.rootPath(path), (err, stats) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(stats.size);
-      });
-    });
+  async size(path: string): Promise<number> {
+    const stats = await this.stats(path);
+    return stats.size;
   }
 
-  lastModified(path: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      fs.stat(this.rootPath(path), (err, stats) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(stats.ctimeMs);
-      });
-    });
+  async lastModified(path: string): Promise<number> {
+    const stats = await this.stats(path);
+    return stats.ctimeMs;
   }
 
   put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>> {
@@ -98,10 +95,35 @@ export class LocalDriver extends Driver {
     return new Promise<boolean>((resolve, reject) => {
       fs.unlink(this.rootPath(path), (err) => {
         if (err) {
-          reject(err);
-          return;
+          return reject(err);
         }
         resolve(true);
+      });
+    });
+  }
+
+  copy(path: string, newPath: string): Promise<void> {
+    ensureDirectoryExistence(this.rootPath(newPath));
+
+    return new Promise((resolve, reject) => {
+      fs.copyFile(this.rootPath(path), this.rootPath(newPath), (err) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
+  move(path: string, newPath: string): Promise<void> {
+    ensureDirectoryExistence(this.rootPath(newPath));
+
+    return new Promise((resolve, reject) => {
+      fs.rename(this.rootPath(path), this.rootPath(newPath), (err) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
       });
     });
   }

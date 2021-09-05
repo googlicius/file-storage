@@ -6,8 +6,8 @@ export class ImageManipulation extends Plugin {
   afterPutKey = 'formats';
 
   async afterPut(path: string) {
-    const file = await this.disk.imageStats(path, true);
-    const thumbnailFile = await generateThumbnail(<ImageStats & { buffer: Buffer }>file);
+    const file = (await this.disk.imageStats(path, true)) as ImageStats & { buffer: Buffer };
+    const thumbnailFile = await generateThumbnail(file);
     const fileData: { [x: string]: ImageStats } = {};
 
     if (thumbnailFile) {
@@ -18,7 +18,7 @@ export class ImageManipulation extends Plugin {
       fileData.thumbnail = thumbnailFile;
     }
 
-    const formats = await generateResponsiveFormats(<ImageStats & { buffer: Buffer }>file);
+    const formats = await generateResponsiveFormats(file);
 
     if (Array.isArray(formats) && formats.length > 0) {
       for (const format of formats) {

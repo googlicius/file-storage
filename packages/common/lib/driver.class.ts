@@ -23,9 +23,10 @@ export abstract class Driver {
           try {
             return await target[prop](...args);
           } catch (error) {
-            if (this.errorHandler) {
-              this.errorHandler(error);
+            if (!this.errorHandler) {
+              throw error;
             }
+            this.errorHandler(error);
           }
         };
       },
@@ -35,6 +36,14 @@ export abstract class Driver {
   init?: () => Promise<void>;
 
   protected errorHandler?(error: any): void;
+
+  /**
+   * Get file information.
+   *
+   * @param path File path.
+   * @throws If file does not exists.
+   */
+  protected stats?(path: string): Promise<any>;
 
   /**
    * Get full url of the file
@@ -62,7 +71,7 @@ export abstract class Driver {
    *
    * @param data stream.Stream | Buffer
    * @param path string
-   * @throws If file doesn't exists.
+   * @throws If file does not exists.
    */
   abstract put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>>;
 
@@ -79,6 +88,24 @@ export abstract class Driver {
    * @throws If deleting failed.
    */
   abstract delete(path: string): Promise<any>;
+
+  /**
+   * Copy a file to new location.
+   *
+   * @param path File path.
+   * @param newPath New file path.
+   * @throws If file does not exists.
+   */
+  abstract copy(path: string, newPath: string): Promise<void>;
+
+  /**
+   * Move a file to new location.
+   *
+   * @param path File path.
+   * @param newPath New file path.
+   * @throws If file does not exists.
+   */
+  abstract move(path: string, newPath: string): Promise<void>;
 
   /**
    * This method will create the given directory, including any needed subdirectories.

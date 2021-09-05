@@ -126,6 +126,22 @@ export class SftpDriver extends Driver {
     return this.clientFunc('delete', this.rootPath(path));
   }
 
+  async copy(path: string, newPath: string): Promise<void> {
+    const file = await this.get(path);
+    await this.put(file, newPath);
+  }
+
+  async move(path: string, newPath: string): Promise<void> {
+    await this.connectToSftpServer();
+    await this.ensureDirectoryExistence(this.rootPath(newPath));
+
+    if (this.exists(newPath)) {
+      await this.delete(newPath);
+    }
+
+    await this.clientFunc('rename', this.rootPath(path), this.rootPath(newPath));
+  }
+
   makeDir(dir: string): Promise<string> {
     return this.clientFunc('mkdir', dir, true);
   }

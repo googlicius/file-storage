@@ -238,6 +238,26 @@ describe('S3 Disk test', () => {
     expect(typeof lastMod2).toBe('number');
   });
 
+  test('Copy file', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+    await Storage.copy(putResult.path, 'photos/bird-copy.jpeg');
+
+    const size = await Storage.size('photos/bird-copy.jpeg');
+    expect(typeof size).toBe('number');
+  });
+
+  test('Move file', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+    await Storage.move(putResult.path, 'photos/new-path.jpeg');
+
+    const size = await Storage.size('photos/new-path.jpeg');
+    expect(typeof size).toBe('number');
+
+    return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError(FileNotFoundError);
+  });
+
   test('No credentials error', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(

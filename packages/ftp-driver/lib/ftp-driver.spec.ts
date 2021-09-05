@@ -142,4 +142,25 @@ describe('FTP Disk test', () => {
     const lastMod = await Storage.lastModified('bird-images/bird2.jpeg');
     expect(typeof lastMod).toBe('number');
   });
+
+  // TODO Should test this case.
+  // test('Copy file', async () => {
+  //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+  //   const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+  //   await Storage.copy(putResult.path, 'photos/bird-copy.jpeg');
+
+  //   const size = await Storage.size('photos/bird-copy.jpeg');
+  //   expect(typeof size).toBe('number');
+  // });
+
+  test('Move file', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+    await Storage.move(putResult.path, 'photos/new-path.jpeg');
+
+    const size = await Storage.size('photos/new-path.jpeg');
+    expect(typeof size).toBe('number');
+
+    return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError();
+  });
 });

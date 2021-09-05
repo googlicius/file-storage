@@ -14,3 +14,4 @@ export * from './plugin.class';
 export * from './enums/driver-name.enum';
 export * from './errors/not-found.error';
 export * from './errors/unauthenticated.error';
+export * from './errors/move-failed.error';

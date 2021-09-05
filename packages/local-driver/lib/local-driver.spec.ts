@@ -171,4 +171,24 @@ describe('Local Disk', () => {
     const lastMod = await Storage.lastModified('bird-images/bird.jpeg');
     expect(typeof lastMod).toBe('number');
   });
+
+  test('Copy file', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+    await Storage.copy(putResult.path, 'photos/bird-copy.jpeg');
+
+    const size = await Storage.size('photos/bird-copy.jpeg');
+    expect(typeof size).toBe('number');
+  });
+
+  test('Move file', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
+    await Storage.move(putResult.path, 'photoss/new-path.jpeg');
+
+    const size = await Storage.size('photoss/new-path.jpeg');
+    expect(typeof size).toBe('number');
+
+    return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError(FileNotFoundError);
+  });
 });
