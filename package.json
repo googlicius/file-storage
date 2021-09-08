@@ -14,6 +14,8 @@
     "typescript"
   ],
   "scripts": {
+    "lerna": "lerna",
+    "new-version": "lerna version --conventional-commits",
     "build": "lerna run build",
     "clean": "lerna run clean",
     "pub": "lerna publish",

@@ -14,12 +14,14 @@ import {
 
 export class LocalDriver extends Driver {
   private root: string;
+  private publicUrl: string;
   static readonly driverName = DriverName.LOCAL;
 
   constructor(config: LocalDiskConfig) {
     super(config);
-    const { root = '' } = config;
+    const { root = '', publicUrl } = config;
     this.root = root;
+    this.publicUrl = publicUrl;
   }
 
   private rootPath(path: string): string {
@@ -45,7 +47,7 @@ export class LocalDriver extends Driver {
   }
 
   url(path: string): string {
-    return `${process.env.APP_URL}/${path}`;
+    return `${this.publicUrl}/${path}`;
   }
 
   async exists(path: string) {
