@@ -64,10 +64,9 @@ function getDisk<U extends Driver>(diskName: string): U {
     throw new Error(`Given disk is not defined: ${diskName}`);
   }
 
-  try {
-    const driver = drivers.find((item) => item && item['driverName'] === diskConfig.driver);
-    return new driver(diskConfig) as U;
-  } catch (error) {
+  const driver = drivers.find((item) => item && item['driverName'] === diskConfig.driver);
+
+  if (!driver) {
     // Throw error missing bult-in driver package.
     if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
       throw new Error(
@@ -76,6 +75,8 @@ function getDisk<U extends Driver>(diskName: string): U {
     }
     throw new Error(`Driver '${diskConfig.driver}' is not declared.`);
   }
+
+  return new driver(diskConfig) as U;
 }
 
 class StorageClass implements Driver {
