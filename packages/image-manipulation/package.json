@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/image-manipulation",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Local driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
