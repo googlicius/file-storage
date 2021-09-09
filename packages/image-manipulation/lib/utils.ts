@@ -1,4 +1,4 @@
-import { dirname } from 'path';
+import { parse, format } from 'path';
 import sharp from 'sharp';
 import { FileStats } from './types';
 
@@ -52,6 +52,8 @@ const generateThumbnail = async (file: FileStats): Promise<FileStats> => {
     if (newBuff) {
       const { width, height, size } = await getMetadatas(newBuff);
       const thumbnailName = `thumbnail_${file.name}`;
+      const parsedPath = parse(file.path);
+      parsedPath.base = thumbnailName;
 
       return {
         name: thumbnailName,
@@ -62,7 +64,7 @@ const generateThumbnail = async (file: FileStats): Promise<FileStats> => {
         height,
         size: bytesToKbytes(size),
         buffer: newBuff,
-        path: `${dirname(file.path)}/${thumbnailName}`,
+        path: `${format(parsedPath)}`,
       };
     }
   }
@@ -135,6 +137,8 @@ const generateBreakpoint = async (
   if (newBuff) {
     const { width, height, size } = await getMetadatas(newBuff);
     const name = `${key}_${file.name}`;
+    const parsedPath = parse(file.path);
+    parsedPath.base = name;
 
     return {
       key,
@@ -147,7 +151,7 @@ const generateBreakpoint = async (
         height,
         size: bytesToKbytes(size),
         buffer: newBuff,
-        path: `${dirname(file.path)}/${name}`,
+        path: `${format(parsedPath)}`,
       },
     };
   }
