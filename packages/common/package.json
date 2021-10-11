@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/common",
-  "version": "1.2.3",
+  "version": "1.2.6",
   "description": "Common utilities, types, interfaces,... for `file-storage`.",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",

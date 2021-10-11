@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/image-manipulation",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "description": "Image manipulation for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -30,7 +30,7 @@
     "sharp": "^0.28.3"
   },
   "devDependencies": {
-    "@file-storage/common": "^1.2.3",
+    "@file-storage/common": "^1.2.6",
     "@types/sharp": "^0.28.5",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
