@@ -1,5 +1,6 @@
 import { parse, format } from 'path';
-import sharp from 'sharp';
+import sharp, { ResizeOptions } from 'sharp';
+import { config } from './config';
 import { FileStats } from './types';
 
 interface Dimension {
@@ -20,19 +21,7 @@ const getMetadatas = (buffer: Buffer): Promise<sharp.Metadata> =>
 const getDimensions = (buffer: Buffer): Promise<Dimension> =>
   getMetadatas(buffer).then(({ width = null, height = null }) => ({ width, height }));
 
-const THUMBNAIL_RESIZE_OPTIONS = {
-  width: 245,
-  height: 156,
-  fit: 'inside',
-};
-
-const DEFAULT_BREAKPOINTS = {
-  large: 1000,
-  medium: 750,
-  small: 500,
-};
-
-const resizeTo = (buffer: Buffer, options: any) =>
+const resizeTo = (buffer: Buffer, options: ResizeOptions) =>
   sharp(buffer)
     .withMetadata()
     .resize(options)
@@ -44,10 +33,15 @@ const generateThumbnail = async (file: FileStats): Promise<FileStats> => {
     return null;
   }
 
+  const thumbnailResizeOptions = config.getThumbnailResizeOptions();
+
   const { width, height } = await getDimensions(file.buffer);
 
-  if (width > THUMBNAIL_RESIZE_OPTIONS.width || height > THUMBNAIL_RESIZE_OPTIONS.height) {
-    const newBuff = await resizeTo(file.buffer, THUMBNAIL_RESIZE_OPTIONS);
+  if (
+    thumbnailResizeOptions &&
+    (width > thumbnailResizeOptions.width || height > thumbnailResizeOptions.height)
+  ) {
+    const newBuff = await resizeTo(file.buffer, thumbnailResizeOptions);
 
     if (newBuff) {
       const { width, height, size } = await getMetadatas(newBuff);
@@ -98,8 +92,6 @@ const optimize = async (buffer: Buffer) => {
     .catch(() => ({ buffer }));
 };
 
-const getBreakpoints = () => DEFAULT_BREAKPOINTS;
-
 const generateResponsiveFormats = async (file: FileStats) => {
   if (!(await canBeProccessed(file.buffer))) {
     return [];
@@ -107,15 +99,18 @@ const generateResponsiveFormats = async (file: FileStats) => {
 
   const originalDimensions = await getDimensions(file.buffer);
 
-  const breakpoints = getBreakpoints();
-  return Promise.all(
-    Object.keys(breakpoints).map((key) => {
-      const breakpoint: number = breakpoints[key];
+  const breakpoints = config.getBreakpoints();
+  return (
+    breakpoints &&
+    Promise.all(
+      Object.keys(breakpoints).map((key) => {
+        const breakpoint: number = breakpoints[key];
 
-      if (breakpointSmallerThan(breakpoint, originalDimensions)) {
-        return generateBreakpoint(key, { file, breakpoint });
-      }
-    }),
+        if (breakpointSmallerThan(breakpoint, originalDimensions)) {
+          return generateBreakpoint(key, { file, breakpoint });
+        }
+      }),
+    )
   );
 };
 

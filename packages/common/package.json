@@ -1,7 +1,7 @@
 {
   "name": "@file-storage/common",
   "version": "1.2.3",
-  "description": "> TODO: description",
+  "description": "Common utilities, types, interfaces,... for `file-storage`.",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
   "license": "MIT",

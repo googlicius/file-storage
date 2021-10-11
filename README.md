@@ -98,7 +98,7 @@ Storage.config({
 
 ## Create your custom driver
 
-If bult-in drivers doesn't match your need, just defines a custom driver by extends `Driver` abstract class:
+If built-in drivers doesn't match your need, just defines a custom driver by extends `Driver` abstract class:
 
 ```typescript
 import Storage from '@file-storage/core';
@@ -139,16 +139,36 @@ Storage.config<OneDriveConfig>({
 
 ## Image manipulation
 
-If you want to upload image and also creates many diferent sizes for web resonsive, install this package, it is acting as a plugin, will generates those image sizes automatically:
+If you want to upload image and also creates many diferent sizes for web resonsive, install this package, it is acting as a plugin, will generates those images automatically. Images will be generated if the size reach given breakpoints. We provide 3 breakpoints by default: large: 1000, medium: 750, small: 500. And the thumbnail is also generaged by default.
 
 ```bash
 $ yarn add @file-storage/image-manipulation
 ```
 
-**HINT**: `Image manipulation` only available on Storage facade, If you obtain a specific disk instance, set the second parameter to `true` to obtain a storage instance insteads:
+**NOTE**: `Image manipulation` only available on Storage facade, If you obtain a specific disk instance, set the second parameter to `true` to obtain a storage instance insteads:
 
 ```javascript
 Storage.disk('your-disk', true); // Storage instance.
+```
+
+#### Image manipulation customize
+
+You can customize responsive formats and thumbnail size:
+
+```typescript
+import ImageManipulation from '@file-storage/image-manipulation';
+
+ImageManipulation.config({
+  breakpoints: {
+    size1: 500,
+    size2: 800,
+  },
+  thumbnailResizeOptions: {
+    width: 333,
+    height: 222,
+    fit: 'contain',
+  },
+});
 ```
 
 ## TODO

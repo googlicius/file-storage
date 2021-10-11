@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image Manipulation should generates 2 custom breakpoints: size1, size2 1`] = `
+Object {
+  "formats": Object {
+    "size1": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 300,
+      "mime": "jpeg",
+      "name": "size1_bird.jpeg",
+      "path": "size1_bird.jpeg",
+      "size": 35.91,
+      "width": 400,
+    },
+    "size2": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 450,
+      "mime": "jpeg",
+      "name": "size2_bird.jpeg",
+      "path": "size2_bird.jpeg",
+      "size": 71.02,
+      "width": 600,
+    },
+    "thumbnail": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 156,
+      "mime": "jpeg",
+      "name": "thumbnail_bird.jpeg",
+      "path": "thumbnail_bird.jpeg",
+      "size": 15.9,
+      "width": 208,
+    },
+  },
+  "message": "Uploading success!",
+  "name": "bird.jpeg",
+  "path": "bird.jpeg",
+  "success": true,
+}
+`;
+
+exports[`Image Manipulation should generates custom thumbnail size 1`] = `
+Object {
+  "formats": Object {
+    "thumbnail": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 222,
+      "mime": "jpeg",
+      "name": "thumbnail_bird.jpeg",
+      "path": "thumbnail_bird.jpeg",
+      "size": 24.8,
+      "width": 333,
+    },
+  },
+  "message": "Uploading success!",
+  "name": "bird.jpeg",
+  "path": "bird.jpeg",
+  "success": true,
+}
+`;
+
+exports[`Image Manipulation should have no responsive formats 1`] = `
+Object {
+  "formats": Object {
+    "thumbnail": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 156,
+      "mime": "jpeg",
+      "name": "thumbnail_bird.jpeg",
+      "path": "thumbnail_bird.jpeg",
+      "size": 15.9,
+      "width": 208,
+    },
+  },
+  "message": "Uploading success!",
+  "name": "bird.jpeg",
+  "path": "bird.jpeg",
+  "success": true,
+}
+`;
+
+exports[`Image Manipulation should have no thumbnail 1`] = `
+Object {
+  "formats": Object {
+    "large": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 750,
+      "mime": "jpeg",
+      "name": "large_bird.jpeg",
+      "path": "large_bird.jpeg",
+      "size": 184.49,
+      "width": 1000,
+    },
+    "medium": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 562,
+      "mime": "jpeg",
+      "name": "medium_bird.jpeg",
+      "path": "medium_bird.jpeg",
+      "size": 105.12,
+      "width": 750,
+    },
+    "small": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 375,
+      "mime": "jpeg",
+      "name": "small_bird.jpeg",
+      "path": "small_bird.jpeg",
+      "size": 52.33,
+      "width": 500,
+    },
+  },
+  "message": "Uploading success!",
+  "name": "bird.jpeg",
+  "path": "bird.jpeg",
+  "success": true,
+}
+`;

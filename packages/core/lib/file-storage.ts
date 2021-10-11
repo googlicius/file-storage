@@ -67,7 +67,7 @@ function getDisk<U extends Driver>(diskName: string): U {
   const driver = drivers.find((item) => item && item['driverName'] === diskConfig.driver);
 
   if (!driver) {
-    // Throw error missing bult-in driver package.
+    // Throw error missing built-in driver package.
     if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
       throw new Error(
         `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,

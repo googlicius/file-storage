@@ -1,9 +1,47 @@
 import { ImageStats, Plugin } from '@file-storage/common';
+import { ResizeOptions } from 'sharp';
+import {
+  config,
+  Breakpoints,
+  DEFAULT_BREAKPOINTS,
+  DEFAULT_THUBNAIL_RESIZE_OPTIONS,
+} from './config';
 import { generateResponsiveFormats, generateThumbnail } from './utils';
+
+interface ImageManipulationOptions {
+  /**
+   * Thumbnail Resize Options, default:
+   * ```
+   * width: 245
+   * height: 156
+   * fit: inside
+   * ```
+   */
+  thumbnailResizeOptions?: ResizeOptions;
+  /**
+   * Responsive formats breakpoints, defaults:
+   * ```
+   * large: 1000
+   * medium: 750
+   * small: 500
+   * ```
+   */
+  breakpoints?: Breakpoints;
+}
 
 export class ImageManipulation extends Plugin {
   static readonly pluginName = 'image_manipulation';
   afterPutKey = 'formats';
+
+  static config(options: ImageManipulationOptions = {}) {
+    const {
+      breakpoints = DEFAULT_BREAKPOINTS,
+      thumbnailResizeOptions = DEFAULT_THUBNAIL_RESIZE_OPTIONS,
+    } = options;
+
+    config.setBreakpoints(breakpoints);
+    config.setThumbnailResizeOptions(thumbnailResizeOptions);
+  }
 
   async afterPut(path: string) {
     const file = (await this.disk.imageStats(path, true)) as ImageStats & { buffer: Buffer };
