@@ -59,4 +59,10 @@ describe('Image Manipulation', () => {
 
     return expect(Storage.put(imageFileStream, 'bird.jpeg')).resolves.toMatchSnapshot();
   });
+
+  it('should not generate image sizes when uploading a file that not an image', () => {
+    const fileStream = fs.createReadStream(getRootCwd() + '/test/support/files/test-file.txt');
+
+    return expect(Storage.put(fileStream, 'test-file.txt')).resolves.toMatchSnapshot();
+  });
 });

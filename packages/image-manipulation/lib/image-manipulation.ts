@@ -29,6 +29,10 @@ interface ImageManipulationOptions {
   breakpoints?: Breakpoints;
 }
 
+interface AfterPutData {
+  [x: string]: ImageStats;
+}
+
 export class ImageManipulation extends Plugin {
   static readonly pluginName = 'image_manipulation';
   afterPutKey = 'formats';
@@ -43,8 +47,17 @@ export class ImageManipulation extends Plugin {
     config.setThumbnailResizeOptions(thumbnailResizeOptions);
   }
 
-  async afterPut(path: string) {
-    const file = (await this.disk.imageStats(path, true)) as ImageStats & { buffer: Buffer };
+  async afterPut(path: string): Promise<AfterPutData> {
+    let file: ImageStats & {
+      buffer: Buffer;
+    };
+
+    try {
+      file = await this.disk.imageStats(path, true);
+    } catch (error) {
+      return;
+    }
+
     const thumbnailFile = await generateThumbnail(file);
     const fileData: { [x: string]: ImageStats } = {};
 

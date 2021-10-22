@@ -9,6 +9,7 @@ import {
   Plugin,
   PutResult,
   getFileName,
+  ImageStats,
 } from '@file-storage/common';
 import { BuitInDiskConfig, StorageConfiguration } from './types';
 import { v4 as uuidv4 } from 'uuid';
@@ -231,8 +232,11 @@ class StorageClass implements Driver {
     return this.defaultDisk.uploadImageFromExternalUri(uri, path, ignoreHeaderContentType);
   }
 
-  imageStats(path: string) {
-    return this.defaultDisk.imageStats(path);
+  imageStats(path: string, keepBuffer: true): Promise<ImageStats & { buffer: Buffer }>;
+  imageStats(path: string, keepBuffer?: boolean): Promise<ImageStats>;
+
+  imageStats(path: string, keepBuffer = false) {
+    return this.defaultDisk.imageStats(path, keepBuffer);
   }
 }
 

@@ -123,3 +123,13 @@ Object {
   "success": true,
 }
 `;
+
+exports[`Image Manipulation should not generate image sizes when uploading a file that not an image 1`] = `
+Object {
+  "formats": undefined,
+  "message": "Uploading success!",
+  "name": "test-file.txt",
+  "path": "test-file.txt",
+  "success": true,
+}
+`;

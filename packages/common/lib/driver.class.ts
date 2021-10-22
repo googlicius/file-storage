@@ -162,6 +162,9 @@ export abstract class Driver {
    * @param path Path of image
    * @param keepBuffer Put image buffer in the result.
    */
+  imageStats(path: string, keepBuffer: true): Promise<ImageStats & { buffer: Buffer }>;
+  imageStats(path: string, keepBuffer?: boolean): Promise<ImageStats>;
+
   async imageStats(path: string, keepBuffer = false): Promise<ImageStats> {
     const stream = await this.get(path);
     const buffer = await streamToBuffer(stream);
