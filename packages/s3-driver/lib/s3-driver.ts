@@ -145,15 +145,10 @@ export class S3Driver extends Driver {
       Bucket: this.bucketName,
       Key,
     };
-    return new Promise<boolean>((resolve, reject) => {
-      this.s3Instance.deleteObject(deleteParams, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      });
-    });
+    return this.s3Instance
+      .deleteObject(deleteParams)
+      .promise()
+      .then(() => true);
   }
 
   async move(path: string, newPath: string): Promise<void> {
