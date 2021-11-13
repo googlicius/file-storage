@@ -80,7 +80,7 @@ function getDisk<U extends Driver>(diskName: string): U {
   return new driver(diskConfig) as U;
 }
 
-class StorageClass implements Driver {
+class StorageClass {
   /**
    * Get default disk instance.
    */
