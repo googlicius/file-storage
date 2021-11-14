@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/local",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "Local driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -27,7 +27,7 @@
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "devDependencies": {
-    "@file-storage/common": "^1.2.9",
+    "@file-storage/common": "^1.3.0",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
   }

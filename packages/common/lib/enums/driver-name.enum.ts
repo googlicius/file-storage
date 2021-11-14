@@ -6,4 +6,5 @@ export enum DriverName {
   S3 = 's3',
   FTP = 'ftp',
   SFTP = 'sftp',
+  GCS = 'gcs',
 }

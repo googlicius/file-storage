@@ -9,6 +9,7 @@ export * from './types/sftp-disk-config.interface';
 export * from './types/image-stats.interface';
 export * from './types/class.type';
 export * from './types/put-result.interface';
+export * from './types/gcs-disk-config.interface';
 export * from './driver.class';
 export * from './plugin.class';
 export * from './enums/driver-name.enum';

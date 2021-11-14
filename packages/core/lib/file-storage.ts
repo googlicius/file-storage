@@ -28,6 +28,7 @@ const drivers: Class<Driver>[] = [
   requireDefaultModule('@file-storage/ftp'),
   requireDefaultModule('@file-storage/local'),
   requireDefaultModule('@file-storage/sftp'),
+  requireDefaultModule('@file-storage/gcs'),
 ];
 
 const plugins: Class<Plugin>[] = [requireDefaultModule('@file-storage/image-manipulation')].filter(

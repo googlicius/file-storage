@@ -31,6 +31,14 @@ services:
       - '2222:22'
     command: usertest:P@ssw0rd:::upload
 
+  fake-gcs-server:
+    image: fsouza/fake-gcs-server
+    ports:
+      - '4443:4443'
+    volumes:
+      - 'gcsdata:/home/gcsdata/'
+    command: ['-scheme', 'http', '-port', '4443', '-external-url', 'http://localhost:4443']
+
   # redis:
   #   image: 'redis'
   #   ports:
@@ -40,3 +48,4 @@ volumes:
   localstackdata:
   sftpdata:
   ftpdata:
+  gcsdata:
