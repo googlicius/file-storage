@@ -175,7 +175,7 @@ ImageManipulation.config({
 
 - [x] Create interface for all result (Need same result format for all drivers).
 - [x] Refactor `customDrivers` option: provides disk defination is enough.
-- [ ] Implement GCS disk.
+- [x] Implement GCS disk.
 - [ ] Put file from a local path.
 - [ ] API section: detailed of each driver.
 - [ ] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.

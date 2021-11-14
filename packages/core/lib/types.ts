@@ -3,12 +3,18 @@ import {
   DiskConfig,
   Driver,
   FtpDiskConfig,
+  GCSDiskConfig,
   LocalDiskConfig,
   S3DiskConfig,
   SftpDiskConfig,
 } from '@file-storage/common';
 
-export type BuitInDiskConfig = LocalDiskConfig | S3DiskConfig | SftpDiskConfig | FtpDiskConfig;
+export type BuitInDiskConfig =
+  | LocalDiskConfig
+  | S3DiskConfig
+  | SftpDiskConfig
+  | FtpDiskConfig
+  | GCSDiskConfig;
 
 export interface StorageConfiguration<T extends DiskConfig> {
   /**

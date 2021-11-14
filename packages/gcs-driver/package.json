@@ -1,0 +1,45 @@
+{
+  "name": "@file-storage/gcs",
+  "version": "1.2.9",
+  "description": "Google Cloud Storage driver for File Storage.",
+  "keywords": [
+    "FileStorage",
+    "gcs",
+    "driver"
+  ],
+  "author": "Dang Nguyen <haidang009@gmail.com>",
+  "homepage": "https://github.com/googlicius/file-storage#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/googlicius/file-storage.git"
+  },
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "clean": "rimraf -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:detectOpenHandles": "jest --detectOpenHandles"
+  },
+  "bugs": {
+    "url": "https://github.com/googlicius/file-storage/issues"
+  },
+  "devDependencies": {
+    "@file-storage/common": "^1.2.9",
+    "rimraf": "~3.0.2",
+    "typescript": "~4.3.5"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^5.16.0"
+  }
+}

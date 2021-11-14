@@ -73,18 +73,18 @@ export class LocalDriver extends Driver {
     ensureDirectoryExistence(this.rootPath(path));
     const writeStream = fs.createWriteStream(this.rootPath(path));
 
-    toStream(data).pipe(writeStream);
-
-    return new Promise((resole, reject) => {
-      writeStream.on('close', () => {
-        resole({
-          success: true,
-          message: 'Uploading success!',
+    return new Promise((resolve, reject) => {
+      toStream(data)
+        .pipe(writeStream)
+        .on('finish', () => {
+          resolve({
+            success: true,
+            message: 'Uploading success!',
+          });
+        })
+        .on('error', (error) => {
+          reject(error);
         });
-      });
-      writeStream.on('error', (error) => {
-        reject(error);
-      });
     });
   }
 
