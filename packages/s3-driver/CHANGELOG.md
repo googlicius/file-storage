@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/googlicius/file-storage/compare/v1.2.8...v1.3.1) (2021-12-30)
+
+**Note:** Version bump only for package @file-storage/s3
+
+
+
+
+
 ## [1.2.9](https://github.com/googlicius/file-storage/compare/v1.2.8...v1.2.9) (2021-11-13)
 
 **Note:** Version bump only for package @file-storage/s3
