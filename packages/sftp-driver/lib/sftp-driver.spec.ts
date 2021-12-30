@@ -24,6 +24,8 @@ describe('Sftp Disk test', () => {
   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
 
   test('Upload image to sftp', () => {
+    jest.setTimeout(15000);
+
     return expect(Storage.put(fileReadStream, 'dog.jpeg')).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
@@ -31,9 +33,8 @@ describe('Sftp Disk test', () => {
   });
 
   test('Upload sftp large image will uploaded to many formats', () => {
-    // const imageFileStream = fs.createReadStream(
-    //   getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
-    // );
+    jest.setTimeout(15000);
+
     const birdReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(Storage.put(birdReadStream, 'my-photo/bird.jpeg')).resolves.toMatchObject({
       success: true,
