@@ -66,7 +66,10 @@ function getDisk<U extends Driver>(diskName: string): U {
     throw new Error(`Given disk is not defined: ${diskName}`);
   }
 
-  const driver = drivers.find((item) => item && item['driverName'] === diskConfig.driver);
+  const driver: Class<Driver> =
+    typeof diskConfig.driver !== 'string'
+      ? diskConfig.driver
+      : drivers.find((item) => item && item['driverName'] === diskConfig.driver);
 
   if (!driver) {
     // Throw error missing built-in driver package.
@@ -75,7 +78,8 @@ function getDisk<U extends Driver>(diskName: string): U {
         `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
       );
     }
-    throw new Error(`Driver '${diskConfig.driver}' is not declared.`);
+    const name = typeof diskConfig.driver !== 'string' ? diskConfig.driver.name : diskConfig.driver;
+    throw new Error(`Driver '${name}' is not declared.`);
   }
 
   return new driver(diskConfig) as U;
@@ -107,7 +111,7 @@ class StorageClass {
   /**
    * Config for storage methods supported in the application.
    */
-  config<U extends DiskConfig = BuitInDiskConfig>(options: StorageConfiguration<U> = {}) {
+  config<U extends DiskConfig>(options: StorageConfiguration<U> = {}) {
     const { diskConfigs = [], customDrivers = [], uniqueFileName = false } = options;
     let { defaultDiskName } = options;
 

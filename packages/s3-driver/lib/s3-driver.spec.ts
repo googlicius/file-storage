@@ -4,6 +4,7 @@ import {
   DriverName,
   FileNotFoundError,
   getRootCwd,
+  S3DiskConfig,
   UnauthenticatedError,
 } from '@file-storage/common';
 import { S3Driver } from './s3-driver';
@@ -13,7 +14,7 @@ describe('S3 Disk test', () => {
   const bucketName2 = 'mybucket2';
 
   beforeAll(async () => {
-    Storage.config({
+    Storage.config<S3DiskConfig>({
       defaultDiskName: 's3Default',
       diskConfigs: [
         {

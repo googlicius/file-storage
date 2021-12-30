@@ -1,10 +1,11 @@
 import fs from 'fs';
 import { Storage } from './file-storage';
-import { DriverName, getExt, getRootCwd } from '@file-storage/common';
+import { DriverName, getExt, getRootCwd, LocalDiskConfig } from '@file-storage/common';
+import { BuitInDiskConfig } from './types';
 
 describe('Storage', () => {
   test('Auto set default disk name when there is only one disk-config', () => {
-    Storage.config({
+    Storage.config<LocalDiskConfig>({
       diskConfigs: [
         {
           driver: DriverName.LOCAL,
@@ -70,7 +71,7 @@ describe('Storage', () => {
   describe('Storage: config errors.', () => {
     test('Duplicated disk name.', () => {
       expect(() =>
-        Storage.config({
+        Storage.config<BuitInDiskConfig>({
           defaultDiskName: 'myDisk',
           diskConfigs: [
             {
@@ -90,7 +91,7 @@ describe('Storage', () => {
 
     test('Please specify a default disk name.', () => {
       expect(() =>
-        Storage.config({
+        Storage.config<BuitInDiskConfig>({
           diskConfigs: [
             {
               driver: DriverName.LOCAL,
@@ -124,7 +125,7 @@ describe('Storage', () => {
 
     test('Given disk is not defined', () => {
       expect(() => {
-        Storage.config({
+        Storage.config<BuitInDiskConfig>({
           defaultDiskName: 'myDisk2',
           diskConfigs: [
             {

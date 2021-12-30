@@ -6,4 +6,4 @@ _|    _|_|\___|_____/ \__|\___/ _|  \__,_|\__, |\___|
 A file system abstraction for Node.js     |___/
 ```
 
-Google Clould Storage driver for `file-storage`
+Google Cloud Storage driver for `file-storage`

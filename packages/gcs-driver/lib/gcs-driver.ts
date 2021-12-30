@@ -1,5 +1,5 @@
 import { Stream } from 'stream';
-import { Storage } from '@google-cloud/storage';
+import { Storage, File } from '@google-cloud/storage';
 import {
   Driver,
   DriverName,
@@ -10,7 +10,7 @@ import {
   UnauthenticatedError,
 } from '@file-storage/common';
 
-export class GoogleClouldStorageDriver extends Driver {
+export class GoogleCloudStorageDriver extends Driver {
   private bucketName: string;
   private publicUrl?: string;
   readonly client: Storage;
@@ -40,6 +40,16 @@ export class GoogleClouldStorageDriver extends Driver {
       default:
         throw error;
     }
+  }
+
+  /**
+   * Create a reference to a file object.
+   *
+   * @inheritdoc
+   * @param path Path of file.
+   */
+  private file(path: string): File {
+    return this.client.bucket(this.bucketName).file(path);
   }
 
   url(path: string): string {
@@ -76,9 +86,7 @@ export class GoogleClouldStorageDriver extends Driver {
    * `eventBasedHold: ${metadata.eventBasedHold ? 'enabled' : 'disabled'}`
    */
   protected stats(path: string) {
-    return this.client
-      .bucket(this.bucketName)
-      .file(path)
+    return this.file(path)
       .getMetadata()
       .then((data) => data[0]);
   }
@@ -94,25 +102,20 @@ export class GoogleClouldStorageDriver extends Driver {
   }
 
   exists(path: string): Promise<boolean> {
-    return this.client
-      .bucket(this.bucketName)
-      .file(path)
+    return this.file(path)
       .exists()
       .then((data) => data[0]);
   }
 
   async get(path: string): Promise<Stream> {
     await this.stats(path);
-    return this.client.bucket(this.bucketName).file(path).createReadStream();
+    return this.file(path).createReadStream();
   }
 
-  async put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>> {
-    // Create a reference to a file object
-    const file = this.client.bucket(this.bucketName).file(path);
-
+  put(data: Stream | Buffer, path: string): Promise<Partial<PutResult>> {
     return new Promise((resolve, reject) => {
       toStream(data)
-        .pipe(file.createWriteStream())
+        .pipe(this.file(path).createWriteStream())
         .on('finish', () => {
           resolve({
             success: true,
@@ -126,22 +129,17 @@ export class GoogleClouldStorageDriver extends Driver {
   }
 
   delete(path: string): Promise<boolean> {
-    return this.client
-      .bucket(this.bucketName)
-      .file(path)
+    return this.file(path)
       .delete()
       .then(() => true);
   }
 
   async copy(path: string, newPath: string): Promise<void> {
-    await this.client
-      .bucket(this.bucketName)
-      .file(path)
-      .copy(this.client.bucket(this.bucketName).file(newPath));
+    await this.file(path).copy(this.file(newPath));
   }
 
   async move(path: string, newPath: string): Promise<void> {
-    await this.client.bucket(this.bucketName).file(path).move(newPath);
+    await this.file(path).move(newPath);
   }
 
   makeDir(dir: string): Promise<string> {
@@ -162,9 +160,10 @@ export class GoogleClouldStorageDriver extends Driver {
 
   /**
    * Create a bucket.
+   *
    * @param name
    */
-  async createBucket(name: string) {
+  createBucket(name: string) {
     return this.client.bucket(name).create();
   }
 }

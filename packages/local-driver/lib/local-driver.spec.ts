@@ -1,10 +1,10 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, FileNotFoundError, getRootCwd } from '@file-storage/common';
+import { DriverName, FileNotFoundError, getRootCwd, LocalDiskConfig } from '@file-storage/common';
 
 describe('Local Disk', () => {
   beforeAll(() => {
-    Storage.config({
+    Storage.config<LocalDiskConfig>({
       diskConfigs: [
         {
           driver: DriverName.LOCAL,

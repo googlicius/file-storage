@@ -3,7 +3,7 @@ import { DriverName } from '../enums/driver-name.enum';
 import { DiskConfig } from './disk-config.interface';
 
 export interface GCSDiskConfig extends DiskConfig, StorageOptions {
-  driverName: DriverName.GCS;
+  driver: DriverName.GCS;
   bucketName: string;
   /**
    * A custom public url instead of default public path.

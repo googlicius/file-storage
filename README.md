@@ -43,10 +43,10 @@ By default only local driver is supported, if you want to use another driver, yo
 If there is no configuration, it will uploads to local disk. You can specific yours by using `config` method:
 
 ```javascript
-import Storage from '@file-storage/core';
+import Storage, { BuitInDiskConfig } from '@file-storage/core';
 import { DriverName } from '@file-storage/common';
 
-Storage.config({
+Storage.config<BuitInDiskConfig>({
   // Default disk that you can access directly via Storage facade.
   defaultDiskName: 'mys3',
   diskConfigs: [
@@ -102,38 +102,35 @@ If built-in drivers doesn't match your need, just defines a custom driver by ext
 
 ```typescript
 import Storage from '@file-storage/core';
-import { Driver } from '@file-storage/common';
+import { Driver, DiskConfig } from '@file-storage/common';
 
-interface OneDriveConfig {
-  name: string; // driver instance name is required.
+interface MyCustomDriverConfig extends DiskConfig {
+  driver: typeof MyCustomDriver;
   ...
 }
 
-class OneDrive extends Driver {
-  static readonly driverName = 'one_drive';
-
-  constructor(config: OneDriveConfig) {
+class MyCustomDriver extends Driver {
+  constructor(config: MyCustomDriverConfig) {
     super(config);
     ...
   }
 
-  // Define all Driver's methods here.
+  // Implement all Driver's methods here.
 }
 
 ```
 
-And provide it to Storage.customDrivers:
+And provide it to Storage.diskConfigs:
 
 ```typescript
-Storage.config<OneDriveConfig>({
+Storage.config<MyCustomDriverConfig>({
   diskConfigs: [
     {
-      driver: 'one_drive',
+      driver: MyCustomDriver,
       name: 'myCustomDisk',
       ...
     }
   ],
-  customDrivers: [OneDrive],
 });
 ```
 
@@ -178,7 +175,7 @@ ImageManipulation.config({
 - [x] Implement GCS disk.
 - [ ] Put file from a local path.
 - [ ] API section: detailed of each driver.
-- [ ] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
+- [x] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
 - [x] Unique file name.
 
 ## License

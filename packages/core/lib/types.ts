@@ -25,10 +25,11 @@ export interface StorageConfiguration<T extends DiskConfig> {
   /**
    * List of disks available in your application.
    */
-  diskConfigs?: (T | BuitInDiskConfig)[];
+  diskConfigs?: T[];
 
   /**
    * Add one or more your custom drivers.
+   * @deprecated
    */
   customDrivers?: Class<Driver>[];
 

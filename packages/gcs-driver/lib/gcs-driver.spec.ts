@@ -1,13 +1,13 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, FileNotFoundError, getRootCwd } from '@file-storage/common';
-import { GoogleClouldStorageDriver } from './gcs-driver';
+import { DriverName, FileNotFoundError, GCSDiskConfig, getRootCwd } from '@file-storage/common';
+import { GoogleCloudStorageDriver } from './gcs-driver';
 
 describe('Google Cloud Storage', () => {
   const bucketName1 = 'my_gcs_bucket';
 
   beforeAll(async () => {
-    Storage.config({
+    Storage.config<GCSDiskConfig>({
       diskConfigs: [
         {
           driver: DriverName.GCS,
@@ -19,7 +19,7 @@ describe('Google Cloud Storage', () => {
       ],
     });
 
-    await Storage.disk<GoogleClouldStorageDriver>('my_gcs').createBucket(bucketName1);
+    await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
   });
 
   test('default disk is my_gcs', () => {
@@ -81,7 +81,7 @@ describe('Google Cloud Storage', () => {
     expect(exist2).toEqual(false);
   });
 
-  test('Get file size', async () => {
+  test('get file size', async () => {
     const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('my_gcs').put(fileReadStream2, 'bird-images/bird-size.jpeg');
 
@@ -97,7 +97,7 @@ describe('Google Cloud Storage', () => {
     expect(typeof lastMod2).toBe('number');
   });
 
-  test('cpy file', async () => {
+  test('copy file', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     const putResult = await Storage.put(fileReadStream, 'bird-images/bird.jpeg');
     await Storage.copy(putResult.path, 'photos/bird-copy.jpeg');

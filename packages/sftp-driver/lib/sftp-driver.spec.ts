@@ -1,10 +1,10 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, getRootCwd } from '@file-storage/common';
+import { DriverName, getRootCwd, SftpDiskConfig } from '@file-storage/common';
 
 describe('Sftp Disk test', () => {
   beforeAll(() => {
-    Storage.config({
+    Storage.config<SftpDiskConfig>({
       diskConfigs: [
         {
           driver: DriverName.SFTP,
