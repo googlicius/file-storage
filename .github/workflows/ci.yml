@@ -42,7 +42,7 @@ jobs:
         id: yarn-cache # use this to check for `cache-hit` ==> if: steps.yarn-cache.outputs.cache-hit != 'true'
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-Yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'

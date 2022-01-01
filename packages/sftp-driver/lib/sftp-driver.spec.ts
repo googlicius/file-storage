@@ -74,13 +74,13 @@ describe('Sftp Disk test', () => {
   // });
 
   // FIXME Timeout error on Github Actions
-  // test('Delete image from sftp', async () => {
-  //   await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird-delete.jpeg');
+  test('Delete image from sftp', async () => {
+    await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird-delete.jpeg');
 
-  //   return expect(Storage.delete('bird-images/bird-delete.jpeg')).resolves.toEqual(
-  //     'Successfully deleted /upload/bird-images/bird-delete.jpeg',
-  //   );
-  // });
+    return expect(Storage.delete('bird-images/bird-delete.jpeg')).resolves.toEqual(
+      'Successfully deleted /upload/bird-images/bird-delete.jpeg',
+    );
+  });
 
   test('File is exists', async () => {
     await Storage.disk('sftp-test').put(fileReadStream, 'bird-images/bird.jpeg');

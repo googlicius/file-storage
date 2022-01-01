@@ -101,6 +101,7 @@ describe('FTP Disk test', () => {
     });
   });
 
+  // FIXME Request timed out even this test success.
   // test('Download image from ftp', async () => {
   //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
   //   await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
