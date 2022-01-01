@@ -105,7 +105,13 @@ describe('FTP Disk test', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
-    return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
+    // return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
+
+    const res = await Storage.disk('sammy').get('test_upload/bird.jpeg');
+
+    expect(res).toBeTruthy();
+
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   });
 
   // test('Delete image from ftp', async () => {
