@@ -39,14 +39,13 @@ jobs:
 
       - name: Receive yarn cached dependencies
         uses: actions/cache@v2
-        id: cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        id: yarn-cache # use this to check for `cache-hit` ==> if: steps.yarn-cache.outputs.cache-hit != 'true'
         with:
-          path: |
-            node_modules/
+          path: '**/node_modules'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn --prefer-offline
 
       - name: Run lint, build, and test
