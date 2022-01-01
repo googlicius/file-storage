@@ -53,6 +53,9 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   }
 }
 
+/**
+ * @deprecated
+ */
 function addCustomDriver(customDrivers: Class<Driver>[] = []) {
   if (customDrivers.length > 0) {
     drivers.push(...customDrivers);
