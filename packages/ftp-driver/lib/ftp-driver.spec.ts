@@ -44,62 +44,62 @@ describe('FTP Disk test', () => {
     });
   });
 
-  // test('Upload ftp large image will uploaded to many formats', () => {
-  //   const imageFileStream = fs.createReadStream(
-  //     getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
-  //   );
-  //   return expect(
-  //     Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
-  //   ).resolves.toMatchObject({
-  //     success: true,
-  //     code: 226,
-  //     message: '226 Transfer complete.',
-  //     name: 'photo-1000x750.jpeg',
-  //     path: 'my-photo/photo-1000x750.jpeg',
-  //     formats: {
-  //       thumbnail: {
-  //         name: 'thumbnail_photo-1000x750.jpeg',
-  //         hash: null,
-  //         ext: 'jpeg',
-  //         mime: 'jpeg',
-  //         width: 208,
-  //         height: 156,
-  //         size: 15.9,
-  //         path: 'my-photo/thumbnail_photo-1000x750.jpeg',
-  //       },
-  //       large: {
-  //         name: 'large_photo-1000x750.jpeg',
-  //         hash: null,
-  //         ext: 'jpeg',
-  //         mime: 'jpeg',
-  //         width: 1000,
-  //         height: 750,
-  //         size: 184.49,
-  //         path: 'my-photo/large_photo-1000x750.jpeg',
-  //       },
-  //       medium: {
-  //         name: 'medium_photo-1000x750.jpeg',
-  //         hash: null,
-  //         ext: 'jpeg',
-  //         mime: 'jpeg',
-  //         width: 750,
-  //         height: 562,
-  //         size: 105.12,
-  //         path: 'my-photo/medium_photo-1000x750.jpeg',
-  //       },
-  //       small: {
-  //         name: 'small_photo-1000x750.jpeg',
-  //         hash: null,
-  //         ext: 'jpeg',
-  //         mime: 'jpeg',
-  //         width: 500,
-  //         height: 375,
-  //         size: 52.33,
-  //         path: 'my-photo/small_photo-1000x750.jpeg',
-  //       },
-  //     },
-  //   });
-  // });
+  test('Upload ftp large image will uploaded to many formats', () => {
+    const imageFileStream = fs.createReadStream(
+      getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
+    );
+    return expect(
+      Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
+    ).resolves.toMatchObject({
+      success: true,
+      code: 226,
+      message: '226 Transfer complete.',
+      name: 'photo-1000x750.jpeg',
+      path: 'my-photo/photo-1000x750.jpeg',
+      formats: {
+        thumbnail: {
+          name: 'thumbnail_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 208,
+          height: 156,
+          size: 15.9,
+          path: 'my-photo/thumbnail_photo-1000x750.jpeg',
+        },
+        large: {
+          name: 'large_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 1000,
+          height: 750,
+          size: 184.49,
+          path: 'my-photo/large_photo-1000x750.jpeg',
+        },
+        medium: {
+          name: 'medium_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 750,
+          height: 562,
+          size: 105.12,
+          path: 'my-photo/medium_photo-1000x750.jpeg',
+        },
+        small: {
+          name: 'small_photo-1000x750.jpeg',
+          hash: null,
+          ext: 'jpeg',
+          mime: 'jpeg',
+          width: 500,
+          height: 375,
+          size: 52.33,
+          path: 'my-photo/small_photo-1000x750.jpeg',
+        },
+      },
+    });
+  });
 
   // test('Download image from ftp', async () => {
   //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
