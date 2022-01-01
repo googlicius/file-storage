@@ -101,28 +101,22 @@ describe('FTP Disk test', () => {
     });
   });
 
-  test('Download image from ftp', async () => {
-    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-    await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
-
-    // return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
-
-    const res = await Storage.disk('sammy').get('test_upload/bird.jpeg');
-
-    expect(res).toBeTruthy();
-
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  });
-
-  // test('Delete image from ftp', async () => {
+  // test('Download image from ftp', async () => {
   //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
   //   await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
-  //   return expect(Storage.disk('sammy').delete('test_upload/bird.jpeg')).resolves.toMatchObject({
-  //     code: 250,
-  //     message: '250 Delete operation successful.',
-  //   });
+  //   return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
   // });
+
+  test('Delete image from ftp', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
+
+    return expect(Storage.disk('sammy').delete('test_upload/bird.jpeg')).resolves.toMatchObject({
+      code: 250,
+      message: '250 Delete operation successful.',
+    });
+  });
 
   // test('File is exists', async () => {
   //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
