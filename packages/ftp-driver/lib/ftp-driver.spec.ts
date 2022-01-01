@@ -101,12 +101,12 @@ describe('FTP Disk test', () => {
     });
   });
 
-  // test('Download image from ftp', async () => {
-  //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-  //   await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
+  test('Download image from ftp', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
-  //   return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
-  // });
+    return expect(Storage.disk('sammy').get('test_upload/bird.jpeg')).resolves.toBeTruthy();
+  });
 
   // test('Delete image from ftp', async () => {
   //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
