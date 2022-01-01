@@ -118,30 +118,30 @@ describe('FTP Disk test', () => {
     });
   });
 
-  // test('File is exists', async () => {
-  //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-  //   await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
+  test('File is exists', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    await Storage.disk('sammy').put(fileReadStream, 'test_upload/bird.jpeg');
 
-  //   return expect(Storage.exists('test_upload/bird.jpeg')).resolves.toEqual(true);
-  // });
+    return expect(Storage.exists('test_upload/bird.jpeg')).resolves.toEqual(true);
+  });
 
-  // test('File is not exists', async () => {
-  //   return expect(Storage.disk('sammy').exists('not-exists.jpeg')).resolves.toEqual(false);
-  // });
+  test('File is not exists', async () => {
+    return expect(Storage.disk('sammy').exists('not-exists.jpeg')).resolves.toEqual(false);
+  });
 
-  // test('Get file size', async () => {
-  //   const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-  //   await Storage.disk('sammy').put(fileReadStream2, 'bird-images/bird.jpeg');
+  test('Get file size', async () => {
+    const fileReadStream2 = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    await Storage.disk('sammy').put(fileReadStream2, 'bird-images/bird.jpeg');
 
-  //   return expect(Storage.size('bird-images/bird.jpeg')).resolves.toEqual(56199);
-  // });
+    return expect(Storage.size('bird-images/bird.jpeg')).resolves.toEqual(56199);
+  });
 
-  // test('Last modified', async () => {
-  //   const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-  //   await Storage.disk('sammy').put(fileReadStream, 'bird-images/bird2.jpeg');
-  //   const lastMod = await Storage.lastModified('bird-images/bird2.jpeg');
-  //   expect(typeof lastMod).toBe('number');
-  // });
+  test('Last modified', async () => {
+    const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
+    await Storage.disk('sammy').put(fileReadStream, 'bird-images/bird2.jpeg');
+    const lastMod = await Storage.lastModified('bird-images/bird2.jpeg');
+    expect(typeof lastMod).toBe('number');
+  });
 
   // // TODO Should test this case.
   // // test('Copy file', async () => {
