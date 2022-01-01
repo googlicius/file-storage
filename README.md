@@ -43,10 +43,10 @@ By default only local driver is supported, if you want to use another driver, yo
 If there is no configuration, it will uploads to local disk. You can specific yours by using `config` method:
 
 ```javascript
-import Storage, { BuitInDiskConfig } from '@file-storage/core';
+import Storage, { BuiltInDiskConfig } from '@file-storage/core';
 import { DriverName } from '@file-storage/common';
 
-Storage.config<BuitInDiskConfig>({
+Storage.config<BuiltInDiskConfig>({
   // Default disk that you can access directly via Storage facade.
   defaultDiskName: 'mys3',
   diskConfigs: [

@@ -9,7 +9,7 @@ import {
   SftpDiskConfig,
 } from '@file-storage/common';
 
-export type BuitInDiskConfig =
+export type BuiltInDiskConfig =
   | LocalDiskConfig
   | S3DiskConfig
   | SftpDiskConfig
