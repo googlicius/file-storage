@@ -11,7 +11,7 @@ import {
   getFileName,
   ImageStats,
 } from '@file-storage/common';
-import { BuitInDiskConfig, StorageConfiguration } from './types';
+import { BuiltInDiskConfig, StorageConfiguration } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { parse, format } from 'path';
 
@@ -21,7 +21,7 @@ const defaultDiskConfig: LocalDiskConfig = {
   root: 'storage',
 };
 
-let availableDisks: (DiskConfig | BuitInDiskConfig)[] = [defaultDiskConfig];
+let availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
 
 const drivers: Class<Driver>[] = [
   requireDefaultModule('@file-storage/s3'),
@@ -53,6 +53,9 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   }
 }
 
+/**
+ * @deprecated
+ */
 function addCustomDriver(customDrivers: Class<Driver>[] = []) {
   if (customDrivers.length > 0) {
     drivers.push(...customDrivers);

@@ -43,7 +43,6 @@
     "typescript": "~4.3.5"
   },
   "jest": {
-    "testTimeout": 150000,
     "coverageReporters": [
       "json-summary",
       "text",
