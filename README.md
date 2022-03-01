@@ -76,7 +76,7 @@ Storage.get('/path/to/s3-bucket/my-image.png');
 
 ## Obtain disk instance:
 
-If you want to interact with a specific disk instead of the default, use `disk` method to get that instance:
+To interact with a specific disk instead of the default, use `disk` method to get that instance:
 
 ```javascript
 Storage.disk('local').get('/path/to/local/my-image.png');
@@ -104,13 +104,13 @@ If built-in drivers doesn't match your need, just defines a custom driver by ext
 import Storage from '@file-storage/core';
 import { Driver, DiskConfig } from '@file-storage/common';
 
-interface MyCustomDriverConfig extends DiskConfig {
+interface MyCustomDiskConfig extends DiskConfig {
   driver: typeof MyCustomDriver;
   ...
 }
 
 class MyCustomDriver extends Driver {
-  constructor(config: MyCustomDriverConfig) {
+  constructor(config: MyCustomDiskConfig) {
     super(config);
     ...
   }
@@ -123,7 +123,7 @@ class MyCustomDriver extends Driver {
 And provide it to Storage.diskConfigs:
 
 ```typescript
-Storage.config<MyCustomDriverConfig>({
+Storage.config<MyCustomDiskConfig>({
   diskConfigs: [
     {
       driver: MyCustomDriver,
@@ -136,7 +136,7 @@ Storage.config<MyCustomDriverConfig>({
 
 ## Image manipulation
 
-If you want to upload image and also creates many diferent sizes for web resonsive, install this package, it is acting as a plugin, will generates those images automatically. Images will be generated if the size reach given breakpoints. We provide 3 breakpoints by default: large: 1000, medium: 750, small: 500. And the thumbnail is also generaged by default.
+To upload image and also creates many diferent sizes for web resonsive, install this package, it is acting as a plugin, will generates those images automatically. Images will be generated if the size reach given breakpoints. We provide 3 breakpoints by default: large: 1000, medium: 750, small: 500. And the thumbnail is also generaged by default.
 
 ```bash
 $ yarn add @file-storage/image-manipulation
@@ -177,6 +177,8 @@ ImageManipulation.config({
 - [ ] API section: detailed of each driver.
 - [x] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
 - [x] Unique file name.
+- [ ] Update `aws-sdk` to v3.
+- [ ] Replace `request` module with another module as it was deprecated.
 
 ## License
 
