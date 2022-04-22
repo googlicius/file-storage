@@ -1,13 +1,18 @@
-import S3, {
-  CopyObjectRequest,
-  DeleteObjectRequest,
-  GetObjectRequest,
-  HeadObjectRequest,
-  PutObjectRequest,
-} from 'aws-sdk/clients/s3';
-import { AWSError } from 'aws-sdk/lib/error';
-import { PromiseResult } from 'aws-sdk/lib/request';
-import { PassThrough, Stream } from 'stream';
+import {
+  S3,
+  HeadObjectCommandInput,
+  PutObjectCommandInput,
+  GetObjectCommandInput,
+  CopyObjectCommandInput,
+  DeleteObjectCommandInput,
+  Bucket,
+  CreateBucketCommandOutput,
+  NoSuchKey,
+  NotFound,
+} from '@aws-sdk/client-s3';
+import { CredentialsProviderError } from '@aws-sdk/property-provider';
+import { Upload } from '@aws-sdk/lib-storage';
+import { PassThrough, Stream, Readable } from 'stream';
 import {
   Driver,
   DriverName,
@@ -36,24 +41,23 @@ export class S3Driver extends Driver {
   }
 
   protected errorHandler(error: any) {
-    switch (error.code) {
-      case 'CredentialsError':
-        throw new UnauthenticatedError(error.message);
-
-      case 'NotFound':
-        throw new FileNotFoundError(error.message);
-
-      default:
-        throw error;
+    if (error instanceof NoSuchKey || error instanceof NotFound) {
+      throw new FileNotFoundError(error.message);
     }
+
+    if (error instanceof CredentialsProviderError) {
+      throw new UnauthenticatedError(error.message);
+    }
+
+    throw error;
   }
 
   protected async stats(path: string) {
-    const getObjectParams: HeadObjectRequest = {
+    const getObjectParams: HeadObjectCommandInput = {
       Key: path,
       Bucket: this.bucketName,
     };
-    return this.s3Instance.headObject(getObjectParams).promise();
+    return this.s3Instance.headObject(getObjectParams);
   }
 
   url(path: string): string {
@@ -85,70 +89,63 @@ export class S3Driver extends Driver {
   put(
     data: Stream | PassThrough | Buffer,
     Key: string,
-    params?: Partial<PutResult & PutObjectRequest>,
+    params?: Partial<PutResult & PutObjectCommandInput>,
   ) {
-    const Body = toStream(data);
-    const putParams: PutObjectRequest = {
-      Bucket: this.bucketName,
-      Key,
-      Body,
-      ACL: 'public-read',
-      ...(typeof params !== 'undefined' && params),
-    };
+    const upload = new Upload({
+      client: this.s3Instance,
+      params: {
+        Bucket: this.bucketName,
+        Key,
+        Body: toStream(data),
+        ACL: 'public-read',
+        ...(typeof params !== 'undefined' && params),
+      },
+    });
 
-    // Make sure that Body is always have `read` function
-    // https://github.com/aws/aws-sdk-js/issues/2100#issuecomment-398534493
-    if (!(Body instanceof PassThrough)) {
-      const passThrough = new PassThrough();
-      Body.pipe(passThrough);
-      putParams.Body = passThrough;
-    }
-
-    return this.s3Instance
-      .upload(putParams)
-      .promise()
-      .then((result) => ({
-        success: true,
-        message: 'Uploading success!',
-        ...result,
-      }));
+    return upload.done().then((result) => ({
+      success: true,
+      message: 'Uploading success!',
+      ...result,
+    }));
   }
 
   /**
    * Get a file from s3 bucket.
    */
-  async get(Key: string): Promise<Stream> {
-    const getObjectParams: GetObjectRequest = {
+  async get(Key: string): Promise<Readable> {
+    const getObjectParams: GetObjectCommandInput = {
       Key,
       Bucket: this.bucketName,
     };
 
-    await this.s3Instance.headObject(getObjectParams).promise();
-    return this.s3Instance.getObject(getObjectParams).createReadStream();
+    const resonpse = await this.s3Instance.getObject(getObjectParams);
+
+    if (resonpse.Body instanceof Readable) {
+      return resonpse.Body;
+    }
+
+    throw new Error('Unknown object stream type.');
   }
 
   async copy(path: string, newPath: string): Promise<void> {
-    const copyObjectParams: CopyObjectRequest = {
+    const copyObjectParams: CopyObjectCommandInput = {
       CopySource: this.bucketName + '/' + path,
       Key: newPath,
       Bucket: this.bucketName,
     };
 
-    await this.s3Instance.copyObject(copyObjectParams).promise();
+    await this.s3Instance.copyObject(copyObjectParams);
   }
 
   /**
    * Delete a file from s3 bucket.
    */
   delete(Key: string): Promise<boolean> {
-    const deleteParams: DeleteObjectRequest = {
+    const deleteParams: DeleteObjectCommandInput = {
       Bucket: this.bucketName,
       Key,
     };
-    return this.s3Instance
-      .deleteObject(deleteParams)
-      .promise()
-      .then(() => true);
+    return this.s3Instance.deleteObject(deleteParams).then(() => true);
   }
 
   async move(path: string, newPath: string): Promise<void> {
@@ -159,45 +156,40 @@ export class S3Driver extends Driver {
   /**
    * Create bucket for testing purpose.
    */
-  async setupMockS3(
-    Bucket: string,
-  ): Promise<S3.Bucket | PromiseResult<S3.CreateBucketOutput, AWSError>> {
-    if (this.s3Instance.endpoint.href !== 'http://localhost:4566/') {
-      throw new Error('Supported only for testing');
-    }
-    const listBucketsResult = await this.s3Instance.listBuckets().promise();
+  async setupMockS3(Bucket: string): Promise<Bucket | Promise<CreateBucketCommandOutput>> {
+    // TODO Uncomment this; Temporary comment because endpoint is not exists in aws-sdk v3.
+    // if (this.s3Instance.endpoint.href !== 'http://localhost:4566/') {
+    //   throw new Error('Supported only for testing');
+    // }
+
+    const listBucketsResult = await this.s3Instance.listBuckets({});
     const existingBucket = listBucketsResult.Buckets.find((bucket) => bucket.Name === Bucket);
 
     if (existingBucket) {
       return existingBucket;
     }
 
-    return this.s3Instance
-      .createBucket({
-        Bucket,
-      })
-      .promise();
+    return this.s3Instance.createBucket({
+      Bucket,
+    });
   }
 
   makeDir(dir: string): Promise<string> {
-    const putParams: PutObjectRequest = {
+    const putParams: PutObjectCommandInput = {
       Bucket: this.bucketName,
       Key: dir.replace(/\/$|$/, '/'),
     };
 
-    return this.s3Instance
-      .putObject(putParams)
-      .promise()
-      .then(() => dir);
+    return this.s3Instance.putObject(putParams).then(() => dir);
   }
 
   async removeDir(dir: string): Promise<string> {
-    const deleteParams: DeleteObjectRequest = {
+    const deleteParams: DeleteObjectCommandInput = {
       Bucket: this.bucketName,
       Key: dir.replace(/\/$|$/, '/'),
     };
 
-    await this.s3Instance.deleteObject(deleteParams).promise();
+    await this.s3Instance.deleteObject(deleteParams);
 
     return dir;
   }

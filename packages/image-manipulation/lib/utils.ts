@@ -1,7 +1,9 @@
-import { parse, format } from 'path';
+import { posix } from 'path';
 import sharp, { ResizeOptions } from 'sharp';
 import { config } from './config';
 import { FileStats } from './types';
+
+const { parse, format } = posix;
 
 interface Dimension {
   width: number;

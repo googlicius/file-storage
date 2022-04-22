@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Readable, Stream } from 'stream';
+import { Readable, Stream, PassThrough } from 'stream';
 
 export const ensureDirectoryExistence = (filePath: string) => {
   const dirname = path.dirname(filePath);
@@ -11,13 +11,20 @@ export const ensureDirectoryExistence = (filePath: string) => {
 };
 
 /**
- * Convert data to stream if it is a buffer or string.
+ * Convert data to readable stream if it is a buffer or string.
  */
-export function toStream(buf: Buffer | Stream | string, chunkSize?: number) {
+// TODO rename to toReadable.
+export function toStream(buf: Buffer | Stream | string, chunkSize?: number): Readable {
   if (typeof buf === 'string') {
     buf = Buffer.from(buf, 'utf8');
   }
   if (!Buffer.isBuffer(buf)) {
+    if (!(buf instanceof Readable)) {
+      const pass = new PassThrough();
+      buf.pipe(pass);
+      return pass;
+    }
+
     return buf;
   }
 
