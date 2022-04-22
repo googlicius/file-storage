@@ -47,7 +47,8 @@ describe('S3 Disk test', () => {
           name: 's3NoCredentials',
           bucketName: bucketName2,
           endpoint: 'http://localhost:4566',
-          // s3ForcePathStyle: true,
+          region: 'us-east-1',
+          forcePathStyle: true,
         },
       ],
     });
