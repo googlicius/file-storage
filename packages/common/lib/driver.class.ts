@@ -1,4 +1,4 @@
-import { Stream } from 'stream';
+import { Stream, Readable } from 'stream';
 import sharp from 'sharp';
 import { DriverName } from './enums/driver-name.enum';
 import { DiskConfig } from './types/disk-config.interface';
@@ -77,7 +77,7 @@ export abstract class Driver {
    * Get a file.
    * @param path string
    */
-  abstract get(path: string): Stream | Promise<Stream>;
+  abstract get(path: string): Stream | Readable | Promise<Stream>;
 
   /**
    * Delete a file

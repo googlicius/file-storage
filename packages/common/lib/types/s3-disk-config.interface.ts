@@ -1,8 +1,8 @@
-import S3 from 'aws-sdk/clients/s3';
+import { S3ClientConfig } from '@aws-sdk/client-s3';
 import { DriverName } from '../enums/driver-name.enum';
 import { DiskConfig } from './disk-config.interface';
 
-export interface S3DiskConfig extends DiskConfig, S3.ClientConfiguration {
+export interface S3DiskConfig extends DiskConfig, S3ClientConfig {
   driver: DriverName.S3;
   bucketName: string;
   /**

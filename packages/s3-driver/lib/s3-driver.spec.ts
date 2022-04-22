@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Readable } from 'stream';
 import Storage from '@file-storage/core';
 import {
   DriverName,
@@ -22,7 +23,7 @@ describe('S3 Disk test', () => {
           name: 's3Test',
           bucketName: bucketName1,
           endpoint: 'http://localhost:4566',
-          s3ForcePathStyle: true,
+          forcePathStyle: true,
           region: 'ap-southeast-1',
           credentials: {
             accessKeyId: '123abc',
@@ -34,7 +35,7 @@ describe('S3 Disk test', () => {
           name: 's3Default',
           bucketName: bucketName2,
           endpoint: 'http://localhost:4566',
-          s3ForcePathStyle: true,
+          forcePathStyle: true,
           region: 'us-east-1',
           credentials: {
             accessKeyId: 'test',
@@ -46,7 +47,8 @@ describe('S3 Disk test', () => {
           name: 's3NoCredentials',
           bucketName: bucketName2,
           endpoint: 'http://localhost:4566',
-          s3ForcePathStyle: true,
+          region: 'us-east-1',
+          forcePathStyle: true,
         },
       ],
     });
@@ -80,20 +82,18 @@ describe('S3 Disk test', () => {
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({
-      Bucket: bucketName1,
-      Key: 'test_upload/test_image_from_uri.jpeg',
+      success: true,
+      message: 'Uploading success!',
     });
   });
 
-  test('Upload image to s3 success', () => {
+  test('should upload image to s3 success', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(
       Storage.disk('s3Test').put(fileReadStream, 'test_upload/bird2.jpeg'),
     ).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
-      Bucket: bucketName1,
-      Key: 'test_upload/bird2.jpeg',
     });
   });
 
@@ -106,7 +106,6 @@ describe('S3 Disk test', () => {
     ).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
-      Key: 'my-photo/photo-1000x750.jpeg',
       formats: {
         thumbnail: {
           name: 'thumbnail_photo-1000x750.jpeg',
@@ -157,8 +156,6 @@ describe('S3 Disk test', () => {
     return expect(Storage.put(fileReadStream, 'test_upload/bird23.jpeg')).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
-      Bucket: bucketName2,
-      Key: 'test_upload/bird23.jpeg',
     });
   });
 
@@ -167,15 +164,14 @@ describe('S3 Disk test', () => {
     return expect(Storage.put(fileReadStream, 'bird.jpeg')).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
-      Bucket: bucketName2,
-      Key: 'bird.jpeg',
     });
   });
 
   test('Download image from s3', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     await Storage.put(fileReadStream, 'test_upload/bird2.jpeg');
-    return expect(Storage.get('test_upload/bird2.jpeg')).resolves.toBeTruthy();
+    const stream = await Storage.get('test_upload/bird2.jpeg');
+    expect(stream instanceof Readable).toBe(true);
   });
 
   test('Download not exists image from s3 error', async () => {
@@ -204,8 +200,6 @@ describe('S3 Disk test', () => {
     ).resolves.toMatchObject({
       success: true,
       message: 'Uploading success!',
-      Key: 'test_upload/image123.jpeg',
-      Bucket: 'another-bucket',
     });
   });
 
