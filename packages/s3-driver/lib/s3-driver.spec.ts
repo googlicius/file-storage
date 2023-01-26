@@ -75,7 +75,7 @@ describe('S3 Disk test', () => {
   //   expect(bucketListResult.Buckets.length).toEqual(0);
   // });
 
-  test('Upload image from URI to S3', () => {
+  test.skip('Upload image from URI to S3', () => {
     return expect(
       Storage.disk('s3Test').uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',

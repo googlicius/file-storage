@@ -5,6 +5,7 @@ import { DiskConfig } from './types/disk-config.interface';
 import { ImageStats } from './types/image-stats.interface';
 import { bytesToKbytes, getExt, getFileName, streamToBuffer } from './utils';
 import { PutResult } from './types/put-result.interface';
+import request from 'request';
 
 export abstract class Driver {
   name: DriverName | string;
@@ -132,8 +133,6 @@ export abstract class Driver {
     path: string,
     ignoreHeaderContentType?: boolean,
   ): Promise<any> {
-    const request = require('request');
-
     return new Promise((resolve, reject) => {
       request.head(uri, async (err: any, res: any) => {
         if (err) {

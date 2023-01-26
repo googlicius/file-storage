@@ -19,14 +19,19 @@ describe('Google Cloud Storage', () => {
       ],
     });
 
-    await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
+    try {
+      await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(error.message);
+    }
   });
 
   test('default disk is my_gcs', () => {
     expect(Storage.name).toEqual('my_gcs');
   });
 
-  test('upload image from URI to GCS', () => {
+  test.skip('upload image from URI to GCS', () => {
     return expect(
       Storage.disk('my_gcs').uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',

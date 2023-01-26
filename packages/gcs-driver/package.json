@@ -10,11 +10,16 @@
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "https://github.com/googlicius/file-storage#readme",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "default": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
@@ -24,9 +29,10 @@
     "url": "git+https://github.com/googlicius/file-storage.git"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile",
+    "build": "npm run clean && npm run compile:cjs && npm run compile:esm",
     "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "compile:cjs": "tsc -p tsconfig-cjs.build.json",
+    "compile:esm": "tsc -p tsconfig-esm.build.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:detectOpenHandles": "jest --detectOpenHandles"

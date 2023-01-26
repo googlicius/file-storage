@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig-cjs.build.json",
+  "compilerOptions": {
+    "outDir": "./dist/cjs",
+    "declarationDir": "./dist/types"
+  },
+  "include": ["lib/**/*.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

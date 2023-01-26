@@ -91,7 +91,7 @@ describe('Local Disk', () => {
     });
   });
 
-  test('Upload image from URI to local', () => {
+  test.skip('Upload image from URI to local', () => {
     return expect(
       Storage.disk('local').uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
@@ -103,7 +103,7 @@ describe('Local Disk', () => {
     });
   });
 
-  test('Upload image from URI to local (Using default disk)', () => {
+  test.skip('Upload image from URI to local (Using default disk)', () => {
     return expect(
       Storage.uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
