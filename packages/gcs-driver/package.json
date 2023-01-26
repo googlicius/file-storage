@@ -29,7 +29,7 @@
     "url": "git+https://github.com/googlicius/file-storage.git"
   },
   "scripts": {
-    "build": "npm run clean && npm run compile:cjs && npm run compile:esm",
+    "build": "yarn clean && yarn compile:cjs && yarn compile:esm",
     "clean": "rimraf -rf ./dist",
     "compile:cjs": "tsc -p tsconfig-cjs.build.json",
     "compile:esm": "tsc -p tsconfig-esm.build.json",

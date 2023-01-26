@@ -4,5 +4,5 @@
     "packages/*",
     "examples/*"
   ],
-  "npmClient": "npm"
+  "npmClient": "yarn"
 }
