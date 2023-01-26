@@ -10,14 +10,14 @@ on:
       - main
 
 jobs:
-  docker:
+  lint_build_test:
     timeout-minutes: 10
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: true
       matrix:
         os: [ubuntu-18.04]
-        node-verion: [14.x]
+        node-version: [14.x]
 
     steps:
       - name: Checkout

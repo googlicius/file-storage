@@ -33,7 +33,7 @@ Storage.put(stream, '/path/of/destination/my-image.png');
 
 ## Configuration
 
-By default only local driver is supported, if you want to use another driver, you need to install corresponding package:
+By default only local driver is supported. To use another driver, you need to install corresponding package:
 
 - Amazon S3: `yarn add @file-storage/s3`
 - FTP: `yarn add @file-storage/ftp`
@@ -42,11 +42,12 @@ By default only local driver is supported, if you want to use another driver, yo
 
 If there is no configuration, it will uploads to local disk. You can specific yours by using `config` method:
 
-```javascript
+```typescript
 import Storage, { BuiltInDiskConfig } from '@file-storage/core';
 import { DriverName } from '@file-storage/common';
+import S3Driver, { S3DiskConfig } from '@file-storage/s3';
 
-Storage.config<BuiltInDiskConfig>({
+Storage.config<BuiltInDiskConfig | S3DiskConfig>({
   // Default disk that you can access directly via Storage facade.
   defaultDiskName: 'mys3',
   diskConfigs: [
@@ -56,7 +57,7 @@ Storage.config<BuiltInDiskConfig>({
       root: 'public',
     },
     {
-      driver: DriverName.S3,
+      driver: S3Driver,
       name: 'mys3',
       bucketName: 'mybucket',
       // Uncomment if you want specify credentials manually.
