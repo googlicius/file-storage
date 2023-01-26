@@ -29,7 +29,7 @@ const drivers: Class<Driver>[] = [
   requireDefaultModule('@file-storage/local'),
   requireDefaultModule('@file-storage/sftp'),
   requireDefaultModule('@file-storage/gcs'),
-];
+].filter((item) => !!item);
 
 const plugins: Class<Plugin>[] = [requireDefaultModule('@file-storage/image-manipulation')].filter(
   (item) => !!item,
@@ -53,13 +53,16 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   }
 }
 
-/**
- * @deprecated
- */
-function addCustomDriver(customDrivers: Class<Driver>[] = []) {
-  if (customDrivers.length > 0) {
-    drivers.push(...customDrivers);
-  }
+function driverNotLoaded(driver: Class<Driver>): boolean {
+  return !drivers.find((item) => item.name === driver.name);
+}
+
+function addDriversFromAvailableDisks() {
+  availableDisks.forEach((disk) => {
+    if (typeof disk.driver !== 'string' && driverNotLoaded(disk.driver)) {
+      drivers.push(disk.driver);
+    }
+  });
 }
 
 function getDisk<U extends Driver>(diskName: string): U {
@@ -72,7 +75,7 @@ function getDisk<U extends Driver>(diskName: string): U {
   const driver: Class<Driver> =
     typeof diskConfig.driver !== 'string'
       ? diskConfig.driver
-      : drivers.find((item) => item && item['driverName'] === diskConfig.driver);
+      : drivers.find((item) => item['driverName'] === diskConfig.driver);
 
   if (!driver) {
     // Throw error missing built-in driver package.
@@ -115,11 +118,11 @@ class StorageClass {
    * Config for storage methods supported in the application.
    */
   config<U extends DiskConfig>(options: StorageConfiguration<U> = {}) {
-    const { diskConfigs = [], customDrivers = [], uniqueFileName = false } = options;
+    const { diskConfigs = [], uniqueFileName = false } = options;
     let { defaultDiskName } = options;
 
     handleDiskConfigs(diskConfigs);
-    addCustomDriver(customDrivers);
+    addDriversFromAvailableDisks();
 
     if (!defaultDiskName) {
       if (availableDisks.length > 1) {
