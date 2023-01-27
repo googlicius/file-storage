@@ -8,6 +8,7 @@ import {
   S3DiskConfig,
   UnauthenticatedError,
 } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 import { S3Driver } from './s3-driver';
 
 describe('S3 Disk test', () => {
@@ -51,6 +52,7 @@ describe('S3 Disk test', () => {
           forcePathStyle: true,
         },
       ],
+      plugins: [ImageManipulation],
     });
 
     await Promise.all([

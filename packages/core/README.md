@@ -144,9 +144,20 @@ To upload image and also creates many diferent sizes for web resonsive, install 
 $ yarn add @file-storage/image-manipulation
 ```
 
+Add provide it to Storage config:
+
+```typescript
+import ImageManipulation from '@file-storage/image-manipulation';
+
+Storage.config({
+  ...
+  plugins: [ImageManipulation],
+});
+```
+
 **NOTE**: `Image manipulation` only available on Storage facade, If you obtain a specific disk instance, set the second parameter to `true` to obtain a storage instance insteads:
 
-```javascript
+```typescript
 Storage.disk('your-disk', true); // Storage instance.
 ```
 
@@ -179,7 +190,7 @@ ImageManipulation.config({
 - [ ] API section: detailed of each driver.
 - [x] Remove `customDrivers` option, pass custom driver class directly to `diskConfigs.driver`.
 - [x] Unique file name.
-- [ ] Update `aws-sdk` to v3.
+- [x] Update `aws-sdk` to v3.
 - [ ] Replace `request` module with another module as it was deprecated.
 
 ## License

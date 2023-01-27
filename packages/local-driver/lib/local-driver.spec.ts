@@ -1,6 +1,7 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
 import { DriverName, FileNotFoundError, getRootCwd, LocalDiskConfig } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 
 describe('Local Disk', () => {
   beforeAll(() => {
@@ -12,6 +13,7 @@ describe('Local Disk', () => {
           root: 'storage',
         },
       ],
+      plugins: [ImageManipulation],
     });
   });
 

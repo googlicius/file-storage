@@ -1,6 +1,7 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
 import { DriverName, FtpDiskConfig, getRootCwd } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 
 describe('FTP Disk test', () => {
   beforeAll(() => {
@@ -17,6 +18,7 @@ describe('FTP Disk test', () => {
           },
         },
       ],
+      plugins: [ImageManipulation],
     });
   });
 

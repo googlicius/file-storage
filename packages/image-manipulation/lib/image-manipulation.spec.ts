@@ -4,6 +4,12 @@ import { getRootCwd } from '@file-storage/common';
 import ImageManipulation from '@file-storage/image-manipulation';
 
 describe('Image Manipulation', () => {
+  beforeAll(() => {
+    Storage.config({
+      plugins: [ImageManipulation],
+    });
+  });
+
   it('should generates 2 custom breakpoints: size1, size2', () => {
     const imageFileStream = fs.createReadStream(
       getRootCwd() + '/test/support/images/photo-1000x750.jpeg',

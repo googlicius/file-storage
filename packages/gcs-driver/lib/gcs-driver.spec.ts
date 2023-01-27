@@ -1,6 +1,7 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
 import { FileNotFoundError, getRootCwd } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 import { GoogleCloudStorageDriver } from './gcs-driver';
 import { GCSDiskConfig } from './gcs-disk-config.interface';
 
@@ -18,6 +19,7 @@ describe('Google Cloud Storage', () => {
           projectId: 'test',
         },
       ],
+      plugins: [ImageManipulation],
     });
 
     try {
@@ -56,6 +58,7 @@ describe('Google Cloud Storage', () => {
     const imageFileStream = fs.createReadStream(
       getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
     );
+
     return expect(
       Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
     ).resolves.toMatchSnapshot();

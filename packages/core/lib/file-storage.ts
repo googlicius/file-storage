@@ -26,15 +26,14 @@ let availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
 
 const drivers: Class<Driver>[] = [
   LocalDriver,
+  // TODO Should remove all requires since drivers provided as their corresponding driver class from now on.
   requireDefaultModule('@file-storage/s3'),
   requireDefaultModule('@file-storage/ftp'),
   requireDefaultModule('@file-storage/sftp'),
   requireDefaultModule('@file-storage/gcs'),
 ].filter((item) => !!item);
 
-const plugins: Class<Plugin>[] = [requireDefaultModule('@file-storage/image-manipulation')].filter(
-  (item) => !!item,
-);
+const plugins: Class<Plugin>[] = [];
 
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
@@ -52,6 +51,10 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   } else {
     availableDisks.push(...diskConfigs);
   }
+}
+
+function handlePluginConfigs(pluginCls: Class<Plugin>[] = []) {
+  plugins.push(...pluginCls);
 }
 
 function driverNotLoaded(driver: Class<Driver>): boolean {
@@ -123,6 +126,7 @@ class StorageClass {
     let { defaultDiskName } = options;
 
     handleDiskConfigs(diskConfigs);
+    handlePluginConfigs(options.plugins);
     addDriversFromAvailableDisks();
 
     if (!defaultDiskName) {
