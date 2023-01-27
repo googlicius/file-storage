@@ -1,7 +1,8 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, FileNotFoundError, GCSDiskConfig, getRootCwd } from '@file-storage/common';
+import { FileNotFoundError, getRootCwd } from '@file-storage/common';
 import { GoogleCloudStorageDriver } from './gcs-driver';
+import { GCSDiskConfig } from './gcs-disk-config.interface';
 
 describe('Google Cloud Storage', () => {
   const bucketName1 = 'my_gcs_bucket';
@@ -10,7 +11,7 @@ describe('Google Cloud Storage', () => {
     Storage.config<GCSDiskConfig>({
       diskConfigs: [
         {
-          driver: DriverName.GCS,
+          driver: GoogleCloudStorageDriver,
           name: 'my_gcs',
           bucketName: bucketName1,
           apiEndpoint: 'http://localhost:4443',

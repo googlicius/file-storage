@@ -33,7 +33,7 @@ Storage.put(stream, '/path/of/destination/my-image.png');
 
 ## Configuration
 
-By default only local driver is supported, if you want to use another driver, you need to install corresponding package:
+By default only local driver is supported. To use another driver, you need to install corresponding package:
 
 - Amazon S3: `yarn add @file-storage/s3`
 - FTP: `yarn add @file-storage/ftp`
@@ -42,31 +42,33 @@ By default only local driver is supported, if you want to use another driver, yo
 
 If there is no configuration, it will uploads to local disk. You can specific yours by using `config` method:
 
-```javascript
-import Storage, { BuiltInDiskConfig } from '@file-storage/core';
-import { DriverName } from '@file-storage/common';
+```typescript
+import Storage from '@file-storage/core';
+import S3Driver, { S3DiskConfig } from '@file-storage/s3';
+import LocalDriver, { LocalDiskConfig } from '@file-storage/local';
 
-Storage.config<BuiltInDiskConfig>({
+const localDisk: LocalDiskConfig = {
+  driver: LocalDriver,
+  name: 'local',
+  root: 'public',
+};
+
+const s3Disk: S3DiskConfig = {
+  driver: S3Driver,
+  name: 'mys3',
+  bucketName: 'mybucket',
+  // Uncomment if you want specify credentials manually.
+  // region: 'ap-southeast-1',
+  // credentials: {
+  //   accessKeyId: '123abc',
+  //   secretAccessKey: '123abc',
+  // },
+};
+
+Storage.config({
   // Default disk that you can access directly via Storage facade.
   defaultDiskName: 'mys3',
-  diskConfigs: [
-    {
-      driver: DriverName.LOCAL,
-      name: 'local',
-      root: 'public',
-    },
-    {
-      driver: DriverName.S3,
-      name: 'mys3',
-      bucketName: 'mybucket',
-      // Uncomment if you want specify credentials manually.
-      // region: 'ap-southeast-1',
-      // credentials: {
-      //   accessKeyId: '123abc',
-      //   secretAccessKey: '123abc',
-      // },
-    },
-  ],
+  diskConfigs: [localDisk, s3Disk],
 });
 
 // Somewhere in your code...
