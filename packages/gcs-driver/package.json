@@ -29,10 +29,9 @@
     "url": "git+https://github.com/googlicius/file-storage.git"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile:cjs && yarn compile:esm",
+    "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
-    "compile:cjs": "tsc -p tsconfig-cjs.build.json",
-    "compile:esm": "tsc -p tsconfig-esm.build.json",
+    "compile": "tsc -p tsconfig-cjs.build.json && tsc -p tsconfig-esm.build.json && ../../create-dist-modules.sh",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:detectOpenHandles": "jest --detectOpenHandles"
