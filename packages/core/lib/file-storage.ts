@@ -11,6 +11,7 @@ import {
   getFileName,
   ImageStats,
 } from '@file-storage/common';
+import LocalDriver from '@file-storage/local';
 import { BuiltInDiskConfig, StorageConfiguration } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { parse, format } from 'path';
@@ -24,9 +25,9 @@ const defaultDiskConfig: LocalDiskConfig = {
 let availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
 
 const drivers: Class<Driver>[] = [
+  LocalDriver,
   requireDefaultModule('@file-storage/s3'),
   requireDefaultModule('@file-storage/ftp'),
-  requireDefaultModule('@file-storage/local'),
   requireDefaultModule('@file-storage/sftp'),
   requireDefaultModule('@file-storage/gcs'),
 ].filter((item) => !!item);
