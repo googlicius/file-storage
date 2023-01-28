@@ -76,14 +76,6 @@ Storage.config({
 Storage.get('/path/to/s3-bucket/my-image.png');
 ```
 
-## Obtain disk instance:
-
-To interact with a specific disk instead of the default, use `disk` method to get that instance:
-
-```javascript
-Storage.disk('local').get('/path/to/local/my-image.png');
-```
-
 ## Unique file name
 
 Enable unique file name to prevent a file get replaced when uploading same file (or same name).
@@ -96,6 +88,17 @@ Storage.config({
 });
 
 // The uploaded path could be like this: /path/to/e8a3e633-fc7f-4dde-b7f0-d2686bcd6836.jpeg
+```
+
+## Obtain specific disk:
+
+To interact with a specific disk instead of the default, use `disk` method:
+
+```typescript
+Storage.disk('local').get('/path/to/local/my-image.png');
+
+// To adjust the configuration on the fly, you can specify the settings in the second argument:
+Storage.disk('local', { uniqueFileName: false }).put(...);
 ```
 
 ## Create your custom driver
@@ -144,7 +147,7 @@ To upload image and also creates many diferent sizes for web resonsive, install 
 $ yarn add @file-storage/image-manipulation
 ```
 
-Add provide it to Storage config:
+And provide it to Storage config:
 
 ```typescript
 import ImageManipulation from '@file-storage/image-manipulation';
@@ -153,12 +156,6 @@ Storage.config({
   ...
   plugins: [ImageManipulation],
 });
-```
-
-**NOTE**: `Image manipulation` only available on Storage facade, If you obtain a specific disk instance, set the second parameter to `true` to obtain a storage instance insteads:
-
-```typescript
-Storage.disk('your-disk', true); // Storage instance.
 ```
 
 #### Image manipulation customize
@@ -192,6 +189,7 @@ ImageManipulation.config({
 - [x] Unique file name.
 - [x] Update `aws-sdk` to v3.
 - [ ] Replace `request` module with another module as it was deprecated.
+- [ ] Remove deprecated: BuiltInDiskConfig, DriverName.
 
 ## License
 

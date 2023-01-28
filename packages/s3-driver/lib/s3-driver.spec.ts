@@ -56,8 +56,8 @@ describe('S3 Disk test', () => {
     });
 
     await Promise.all([
-      Storage.disk<S3Driver>('s3Test').setupMockS3(bucketName1),
-      Storage.disk<S3Driver>('s3Test').setupMockS3(bucketName2),
+      Storage.disk('s3Test').instance<S3Driver>().setupMockS3(bucketName1),
+      Storage.disk('s3Test').instance<S3Driver>().setupMockS3(bucketName2),
     ]);
   });
 
@@ -192,7 +192,7 @@ describe('S3 Disk test', () => {
 
   test('Upload to another bucket', async () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
-    const s3Disk = <S3Driver>Storage.disk();
+    const s3Disk = Storage.instance<S3Driver>();
     await s3Disk.setupMockS3('another-bucket');
 
     return expect(
