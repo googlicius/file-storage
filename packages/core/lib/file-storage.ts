@@ -22,8 +22,6 @@ const defaultDiskConfig: LocalDiskConfig = {
   root: 'storage',
 };
 
-let availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
-
 const drivers: Class<Driver>[] = [
   LocalDriver,
   // TODO Should remove all requires since drivers provided as their corresponding driver class from now on.
@@ -33,11 +31,9 @@ const drivers: Class<Driver>[] = [
   requireDefaultModule('@file-storage/gcs'),
 ].filter((item) => !!item);
 
-const plugins: Class<Plugin>[] = [];
-
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
-  availableDisks = [];
+  const availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [];
 
   const hasDuplicatesName = () =>
     diskConfigs.some((diskConfig) => seen.size === seen.add(diskConfig.name).size);
@@ -46,56 +42,24 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
     throw new Error('Duplicated disk name.');
   }
 
-  if (diskConfigs.length === 0) {
-    availableDisks.push(defaultDiskConfig);
-  } else {
+  if (diskConfigs.length > 0) {
     availableDisks.push(...diskConfigs);
+  } else {
+    availableDisks.push(defaultDiskConfig);
   }
-}
 
-function handlePluginConfigs(pluginCls: Class<Plugin>[] = []) {
-  plugins.push(...pluginCls);
+  return availableDisks;
 }
 
 function driverNotLoaded(driver: Class<Driver>): boolean {
   return !drivers.find((item) => item.name === driver.name);
 }
 
-function addDriversFromAvailableDisks() {
-  availableDisks.forEach((disk) => {
-    if (typeof disk.driver !== 'string' && driverNotLoaded(disk.driver)) {
-      drivers.push(disk.driver);
-    }
-  });
-}
+export class StorageClass {
+  private availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
 
-function getDisk<U extends Driver>(diskName: string): U {
-  const diskConfig = availableDisks.find((item) => item.name === diskName);
+  private plugins: Class<Plugin>[] = [];
 
-  if (!diskConfig) {
-    throw new Error(`Given disk is not defined: ${diskName}`);
-  }
-
-  const driver: Class<Driver> =
-    typeof diskConfig.driver !== 'string'
-      ? diskConfig.driver
-      : drivers.find((item) => item['driverName'] === diskConfig.driver);
-
-  if (!driver) {
-    // Throw error missing built-in driver package.
-    if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
-      throw new Error(
-        `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
-      );
-    }
-    const name = typeof diskConfig.driver !== 'string' ? diskConfig.driver.name : diskConfig.driver;
-    throw new Error(`Driver '${name}' is not declared.`);
-  }
-
-  return new driver(diskConfig) as U;
-}
-
-class StorageClass {
   /**
    * Get default disk instance.
    */
@@ -108,68 +72,117 @@ class StorageClass {
 
   private uniqueFileName = false;
 
-  constructor(config = true) {
-    if (config) {
-      this.config();
-    }
+  constructor() {
+    this.config();
   }
 
   get name() {
     return this.defaultDisk.name;
   }
 
+  private getDriversFromAvailableDisks(): Class<Driver>[] {
+    return this.availableDisks
+      .filter((disk) => typeof disk.driver !== 'string' && driverNotLoaded(disk.driver))
+      .map((disk) => disk.driver as Class<Driver>);
+  }
+
   /**
    * Config for storage methods supported in the application.
    */
   config<U extends DiskConfig>(options: StorageConfiguration<U> = {}) {
-    const { diskConfigs = [], uniqueFileName = false } = options;
+    const { diskConfigs, uniqueFileName } = options;
     let { defaultDiskName } = options;
 
-    handleDiskConfigs(diskConfigs);
-    handlePluginConfigs(options.plugins);
-    addDriversFromAvailableDisks();
-
-    if (!defaultDiskName) {
-      if (availableDisks.length > 1) {
-        throw new Error('Please specify a default disk name.');
-      }
-      defaultDiskName = availableDisks[0].name;
+    if (typeof diskConfigs !== 'undefined') {
+      this.availableDisks = handleDiskConfigs(diskConfigs);
     }
 
-    this.uniqueFileName = uniqueFileName;
-    this.defaultDisk = getDisk(defaultDiskName);
+    drivers.push(...this.getDriversFromAvailableDisks());
 
-    this.pluginInstances = plugins.map((pluginClass) => {
+    if (options.plugins && options.plugins.length > 0) {
+      this.plugins = options.plugins;
+    }
+
+    if (!defaultDiskName) {
+      if (this.availableDisks.length > 1) {
+        throw new Error('Please specify a default disk name.');
+      }
+      defaultDiskName = this.availableDisks[0].name;
+    }
+
+    if (typeof uniqueFileName !== 'undefined') {
+      this.uniqueFileName = uniqueFileName;
+    }
+
+    this.defaultDisk = this.getDisk(defaultDiskName);
+
+    this.pluginInstances = this.plugins.map((pluginClass) => {
       const plugin = new pluginClass();
       plugin.init(this.defaultDisk);
       return plugin;
     });
   }
 
+  private getDisk<U extends Driver>(diskName: string): U {
+    const diskConfig = this.availableDisks.find((item) => item.name === diskName);
+
+    if (!diskConfig) {
+      throw new Error(`Given disk is not defined: ${diskName}`);
+    }
+
+    const driver: Class<Driver> =
+      typeof diskConfig.driver !== 'string'
+        ? diskConfig.driver
+        : drivers.find((item) => item['driverName'] === diskConfig.driver);
+
+    if (!driver) {
+      // Throw error missing built-in driver package.
+      if ((<any>Object).values(DriverName).includes(diskConfig.driver)) {
+        throw new Error(
+          `Please install \`@file-storage/${diskConfig.driver}\` for ${diskConfig.driver} driver`,
+        );
+      }
+      const name =
+        typeof diskConfig.driver !== 'string' ? diskConfig.driver.name : diskConfig.driver;
+      throw new Error(`Driver '${name}' is not declared.`);
+    }
+
+    return new driver(diskConfig) as U;
+  }
+
   /**
-   * Get disk instance by diskName.
+   * Get current disk instance.
+   */
+  instance<U extends Driver>(): U {
+    return this.defaultDisk as U;
+  }
+
+  /**
+   * Get StorageClass instance by diskName.
    *
    * @param diskName Disk name.
    * @param asStorage Return a storage instance.
    */
-  disk<U extends Driver>(diskName?: string): U;
-  disk(diskName: string, asStorage: true): StorageClass;
+  disk(diskName: string): StorageClass;
+  disk<U extends DiskConfig>(options: StorageConfiguration<U>): StorageClass;
+  disk<U extends DiskConfig>(diskName: string, options: StorageConfiguration<U>): StorageClass;
+  disk<U extends DiskConfig>(
+    diskName: string | StorageConfiguration<U>,
+    options?: StorageConfiguration<U>,
+  ): StorageClass {
+    options = typeof diskName === 'string' ? options : diskName;
 
-  disk(diskName?: string, asStorage = false) {
-    if (!diskName) {
-      return this.defaultDisk;
-    }
+    const storage: StorageClass = Object.assign(new StorageClass(), this);
 
-    if (asStorage) {
-      const storage = new StorageClass(false);
-      storage.config({
-        diskConfigs: availableDisks,
-        defaultDiskName: diskName,
-      });
-      return storage;
-    }
+    const defaultDiskName =
+      typeof diskName === 'string' ? diskName : options.defaultDiskName || this.name;
 
-    return getDisk(diskName);
+    storage.config({
+      ...options,
+      defaultDiskName,
+    });
+
+    return storage;
   }
 
   url(path: string) {
@@ -206,7 +219,7 @@ class StorageClass {
 
     result = Object.assign({}, result, putData);
 
-    for (const plugin of this.pluginInstances) {
+    for (const plugin of this.pluginInstances || []) {
       if (plugin.afterPutKey && plugin.afterPut) {
         const afterPutData = await plugin.afterPut(result.path);
         result[plugin.afterPutKey] = afterPutData;

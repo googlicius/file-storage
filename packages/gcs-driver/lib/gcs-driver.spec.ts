@@ -23,7 +23,7 @@ describe('Google Cloud Storage', () => {
     });
 
     try {
-      await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
+      await Storage.disk('my_gcs').instance<GoogleCloudStorageDriver>().createBucket(bucketName1);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error.message);
