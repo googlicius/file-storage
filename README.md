@@ -189,6 +189,7 @@ ImageManipulation.config({
 - [x] Unique file name.
 - [x] Update `aws-sdk` to v3.
 - [ ] Replace `request` module with another module as it was deprecated.
+- [ ] Remove deprecated: BuiltInDiskConfig, DriverName.
 
 ## License
 
