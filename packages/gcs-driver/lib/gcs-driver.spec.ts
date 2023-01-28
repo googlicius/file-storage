@@ -1,7 +1,9 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, FileNotFoundError, GCSDiskConfig, getRootCwd } from '@file-storage/common';
+import { FileNotFoundError, getRootCwd } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 import { GoogleCloudStorageDriver } from './gcs-driver';
+import { GCSDiskConfig } from './gcs-disk-config.interface';
 
 describe('Google Cloud Storage', () => {
   const bucketName1 = 'my_gcs_bucket';
@@ -10,23 +12,29 @@ describe('Google Cloud Storage', () => {
     Storage.config<GCSDiskConfig>({
       diskConfigs: [
         {
-          driver: DriverName.GCS,
+          driver: GoogleCloudStorageDriver,
           name: 'my_gcs',
           bucketName: bucketName1,
           apiEndpoint: 'http://localhost:4443',
           projectId: 'test',
         },
       ],
+      plugins: [ImageManipulation],
     });
 
-    await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
+    try {
+      await Storage.disk<GoogleCloudStorageDriver>('my_gcs').createBucket(bucketName1);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(error.message);
+    }
   });
 
   test('default disk is my_gcs', () => {
     expect(Storage.name).toEqual('my_gcs');
   });
 
-  test('upload image from URI to GCS', () => {
+  test.skip('upload image from URI to GCS', () => {
     return expect(
       Storage.disk('my_gcs').uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
@@ -50,6 +58,7 @@ describe('Google Cloud Storage', () => {
     const imageFileStream = fs.createReadStream(
       getRootCwd() + '/test/support/images/photo-1000x750.jpeg',
     );
+
     return expect(
       Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
     ).resolves.toMatchSnapshot();

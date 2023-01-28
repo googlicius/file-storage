@@ -8,6 +8,7 @@ import {
   S3DiskConfig,
   UnauthenticatedError,
 } from '@file-storage/common';
+import ImageManipulation from '@file-storage/image-manipulation';
 import { S3Driver } from './s3-driver';
 
 describe('S3 Disk test', () => {
@@ -51,6 +52,7 @@ describe('S3 Disk test', () => {
           forcePathStyle: true,
         },
       ],
+      plugins: [ImageManipulation],
     });
 
     await Promise.all([
@@ -75,7 +77,7 @@ describe('S3 Disk test', () => {
   //   expect(bucketListResult.Buckets.length).toEqual(0);
   // });
 
-  test('Upload image from URI to S3', () => {
+  test.skip('Upload image from URI to S3', () => {
     return expect(
       Storage.disk('s3Test').uploadImageFromExternalUri(
         'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',

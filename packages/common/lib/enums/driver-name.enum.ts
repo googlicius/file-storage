@@ -1,5 +1,6 @@
 /**
  * Supported driver name.
+ * @deprecated Use driver class when providing driver instead.
  */
 export enum DriverName {
   LOCAL = 'local',

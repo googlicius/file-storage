@@ -1,6 +1,5 @@
 import { Stream } from 'stream';
-
-const request = require('request');
+import request from 'request';
 
 export abstract class CommonDisk {
   abstract put(stream: Stream, path: string): Promise<any>;

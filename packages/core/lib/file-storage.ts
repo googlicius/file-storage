@@ -11,6 +11,7 @@ import {
   getFileName,
   ImageStats,
 } from '@file-storage/common';
+import LocalDriver from '@file-storage/local';
 import { BuiltInDiskConfig, StorageConfiguration } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { parse, format } from 'path';
@@ -24,16 +25,15 @@ const defaultDiskConfig: LocalDiskConfig = {
 let availableDisks: (DiskConfig | BuiltInDiskConfig)[] = [defaultDiskConfig];
 
 const drivers: Class<Driver>[] = [
+  LocalDriver,
+  // TODO Should remove all requires since drivers provided as their corresponding driver class from now on.
   requireDefaultModule('@file-storage/s3'),
   requireDefaultModule('@file-storage/ftp'),
-  requireDefaultModule('@file-storage/local'),
   requireDefaultModule('@file-storage/sftp'),
   requireDefaultModule('@file-storage/gcs'),
-];
+].filter((item) => !!item);
 
-const plugins: Class<Plugin>[] = [requireDefaultModule('@file-storage/image-manipulation')].filter(
-  (item) => !!item,
-);
+const plugins: Class<Plugin>[] = [];
 
 function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   const seen = new Set();
@@ -53,13 +53,20 @@ function handleDiskConfigs(diskConfigs: DiskConfig[]) {
   }
 }
 
-/**
- * @deprecated
- */
-function addCustomDriver(customDrivers: Class<Driver>[] = []) {
-  if (customDrivers.length > 0) {
-    drivers.push(...customDrivers);
-  }
+function handlePluginConfigs(pluginCls: Class<Plugin>[] = []) {
+  plugins.push(...pluginCls);
+}
+
+function driverNotLoaded(driver: Class<Driver>): boolean {
+  return !drivers.find((item) => item.name === driver.name);
+}
+
+function addDriversFromAvailableDisks() {
+  availableDisks.forEach((disk) => {
+    if (typeof disk.driver !== 'string' && driverNotLoaded(disk.driver)) {
+      drivers.push(disk.driver);
+    }
+  });
 }
 
 function getDisk<U extends Driver>(diskName: string): U {
@@ -72,7 +79,7 @@ function getDisk<U extends Driver>(diskName: string): U {
   const driver: Class<Driver> =
     typeof diskConfig.driver !== 'string'
       ? diskConfig.driver
-      : drivers.find((item) => item && item['driverName'] === diskConfig.driver);
+      : drivers.find((item) => item['driverName'] === diskConfig.driver);
 
   if (!driver) {
     // Throw error missing built-in driver package.
@@ -115,11 +122,12 @@ class StorageClass {
    * Config for storage methods supported in the application.
    */
   config<U extends DiskConfig>(options: StorageConfiguration<U> = {}) {
-    const { diskConfigs = [], customDrivers = [], uniqueFileName = false } = options;
+    const { diskConfigs = [], uniqueFileName = false } = options;
     let { defaultDiskName } = options;
 
     handleDiskConfigs(diskConfigs);
-    addCustomDriver(customDrivers);
+    handlePluginConfigs(options.plugins);
+    addDriversFromAvailableDisks();
 
     if (!defaultDiskName) {
       if (availableDisks.length > 1) {
