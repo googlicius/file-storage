@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/googlicius/file-storage/compare/v1.3.4-alpha.2...v1.3.4) (2023-01-28)
+
+**Note:** Version bump only for package @file-storage/image-manipulation
+
+
+
+
+
 ## [1.3.4-alpha.2](https://github.com/googlicius/file-storage/compare/v1.3.4-alpha.1...v1.3.4-alpha.2) (2023-01-27)
 
 **Note:** Version bump only for package @file-storage/image-manipulation
