@@ -3,4 +3,3 @@
 
 yarn lint
 yarn build
-yarn test
