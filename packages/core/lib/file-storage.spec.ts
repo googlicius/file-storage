@@ -219,7 +219,7 @@ describe('Storage', () => {
       const localResult = await NewStorage.put(Buffer.from('Test text'), 'test.txt');
 
       expect(s3Result.path).toEqual('test.txt');
-      expect(localResult.path);
+      expect(localResult.path.length).toEqual(36 + '.txt'.length);
     });
   });
 });

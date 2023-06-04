@@ -28,7 +28,7 @@
     "compile": "tsc -p tsconfig-cjs.build.json && tsc -p tsconfig-esm.build.json && ../../create-dist-modules.sh"
   },
   "dependencies": {
-    "request": "^2.88.2",
+    "bent": "^7.3.12",
     "sharp": "^0.28.3"
   },
   "devDependencies": {

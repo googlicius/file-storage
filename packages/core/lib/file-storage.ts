@@ -161,25 +161,27 @@ export class StorageClass {
    * Get StorageClass instance by diskName.
    *
    * @param diskName Disk name.
-   * @param asStorage Return a storage instance.
+   * @param options Adjust default settings on the fly.
    */
   disk(diskName: string): StorageClass;
   disk<U extends DiskConfig>(options: StorageConfiguration<U>): StorageClass;
   disk<U extends DiskConfig>(diskName: string, options: StorageConfiguration<U>): StorageClass;
   disk<U extends DiskConfig>(
-    diskName: string | StorageConfiguration<U>,
+    diskNameOrOptions: string | StorageConfiguration<U>,
     options?: StorageConfiguration<U>,
   ): StorageClass {
-    options = typeof diskName === 'string' ? options : diskName;
+    options = typeof diskNameOrOptions === 'string' ? options : diskNameOrOptions;
 
     const storage: StorageClass = Object.assign(new StorageClass(), this);
 
-    const defaultDiskName =
-      typeof diskName === 'string' ? diskName : options.defaultDiskName || this.name;
+    const diskName =
+      typeof diskNameOrOptions === 'string'
+        ? diskNameOrOptions
+        : options.defaultDiskName || this.name;
 
     storage.config({
       ...options,
-      defaultDiskName,
+      defaultDiskName: diskName,
     });
 
     return storage;
