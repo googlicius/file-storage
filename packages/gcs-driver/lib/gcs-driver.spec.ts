@@ -37,8 +37,7 @@ describe('Google Cloud Storage', () => {
   test('upload image from URI to GCS', () => {
     return expect(
       Storage.disk('my_gcs').uploadImageFromExternalUri(
-        'https://file-examples.com/storage/fe629099fc646eff79529f9/2017/10/file_example_JPG_100kB.jpg',
-        'test_upload/test_image_from_uri.jpeg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
       ),
     ).resolves.toMatchObject({
       success: true,

@@ -80,7 +80,7 @@ describe('S3 Disk test', () => {
   test('Upload image from URI to S3', () => {
     return expect(
       Storage.disk('s3Test').uploadImageFromExternalUri(
-        'https://file-examples.com/storage/fe629099fc646eff79529f9/2017/10/file_example_JPG_100kB.jpg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({

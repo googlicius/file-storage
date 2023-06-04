@@ -96,7 +96,7 @@ describe('Local Disk', () => {
   test('Upload image from URI to local', () => {
     return expect(
       Storage.disk('local').uploadImageFromExternalUri(
-        'https://file-examples.com/storage/fe629099fc646eff79529f9/2017/10/file_example_JPG_100kB.jpg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({
@@ -108,7 +108,7 @@ describe('Local Disk', () => {
   test('Upload image from URI to local (Using default disk)', () => {
     return expect(
       Storage.uploadImageFromExternalUri(
-        'https://file-examples.com/storage/fe629099fc646eff79529f9/2017/10/file_example_JPG_100kB.jpg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({
