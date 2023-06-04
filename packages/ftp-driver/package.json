@@ -1,6 +1,6 @@
 {
   "name": "@file-storage/ftp",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "Ftp disk driver for file-storage",
   "author": "Dang Nguyen <haidang009@gmail.com>",
   "homepage": "",
@@ -37,7 +37,7 @@
     "@file-storage/core": "^1.0.0"
   },
   "devDependencies": {
-    "@file-storage/common": "^1.3.5",
+    "@file-storage/common": "^1.3.6",
     "rimraf": "~3.0.2",
     "typescript": "~4.3.5"
   }
