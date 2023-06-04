@@ -93,10 +93,10 @@ describe('Local Disk', () => {
     });
   });
 
-  test.skip('Upload image from URI to local', () => {
+  test('Upload image from URI to local', () => {
     return expect(
       Storage.disk('local').uploadImageFromExternalUri(
-        'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({
@@ -105,10 +105,10 @@ describe('Local Disk', () => {
     });
   });
 
-  test.skip('Upload image from URI to local (Using default disk)', () => {
+  test('Upload image from URI to local (Using default disk)', () => {
     return expect(
       Storage.uploadImageFromExternalUri(
-        'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({

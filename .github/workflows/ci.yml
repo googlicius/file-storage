@@ -12,11 +12,11 @@ on:
 jobs:
   lint_build_test:
     timeout-minutes: 10
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-18.04]
+        os: [ubuntu-22.04]
         node-version: [14.x]
 
     steps:

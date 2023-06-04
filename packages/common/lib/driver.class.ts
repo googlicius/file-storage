@@ -5,7 +5,7 @@ import { DiskConfig } from './types/disk-config.interface';
 import { ImageStats } from './types/image-stats.interface';
 import { bytesToKbytes, getExt, getFileName, streamToBuffer } from './utils';
 import { PutResult } from './types/put-result.interface';
-import request from 'request';
+import bent from 'bent';
 
 export abstract class Driver {
   name: DriverName | string;
@@ -128,31 +128,24 @@ export abstract class Driver {
    * @param ignoreHeaderContentType ignore checking content-type header.
    * @returns Promise<any>
    */
-  uploadImageFromExternalUri(
+  async uploadImageFromExternalUri(
     uri: string,
     path: string,
-    ignoreHeaderContentType?: boolean,
+    ignoreHeaderContentType = false,
   ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      request.head(uri, async (err: any, res: any) => {
-        if (err) {
-          reject(err);
-        }
-        if (
-          ignoreHeaderContentType ||
-          (res && res.headers['content-type'] && res.headers['content-type'].match(/image/))
-        ) {
-          try {
-            const data = await this.put(request(uri), path);
-            resolve(data);
-          } catch (error) {
-            reject(error);
-          }
-        } else {
-          reject(new Error('Not an image: ' + uri));
-        }
-      });
-    });
+    const head = bent('HEAD');
+    const get = bent('GET', 200, 'buffer');
+
+    const res = await head(uri);
+    if (
+      ignoreHeaderContentType ||
+      (res.headers['content-type'] && res.headers['content-type'].includes('image'))
+    ) {
+      const imageBuffer = await get(uri);
+      return this.put(imageBuffer, path);
+    }
+
+    throw new Error('Not an image: ' + uri);
   }
 
   /**

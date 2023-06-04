@@ -34,10 +34,10 @@ describe('Google Cloud Storage', () => {
     expect(Storage.name).toEqual('my_gcs');
   });
 
-  test.skip('upload image from URI to GCS', () => {
+  test('upload image from URI to GCS', () => {
     return expect(
       Storage.disk('my_gcs').uploadImageFromExternalUri(
-        'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({

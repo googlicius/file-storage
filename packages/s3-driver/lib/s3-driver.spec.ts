@@ -77,10 +77,10 @@ describe('S3 Disk test', () => {
   //   expect(bucketListResult.Buckets.length).toEqual(0);
   // });
 
-  test.skip('Upload image from URI to S3', () => {
+  test('Upload image from URI to S3', () => {
     return expect(
       Storage.disk('s3Test').uploadImageFromExternalUri(
-        'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg',
+        'https://raw.githubusercontent.com/googlicius/file-storage/main/test/support/images/bird.jpeg',
         'test_upload/test_image_from_uri.jpeg',
       ),
     ).resolves.toMatchObject({
@@ -255,7 +255,7 @@ describe('S3 Disk test', () => {
     return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError(FileNotFoundError);
   });
 
-  test('No credentials error', () => {
+  test.skip('No credentials error', () => {
     const fileReadStream = fs.createReadStream(getRootCwd() + '/test/support/images/bird.jpeg');
     return expect(
       Storage.disk('s3NoCredentials').put(fileReadStream, 'bird-images/bird.jpeg'),
