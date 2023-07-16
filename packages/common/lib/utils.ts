@@ -114,7 +114,7 @@ export function getExt(filepath: string) {
 }
 
 /**
- * Get file name frome give path.
+ * Get file name from give path.
  */
 export function getFileName(filePath: string) {
   return filePath
