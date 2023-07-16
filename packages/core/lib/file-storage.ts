@@ -247,6 +247,10 @@ export class StorageClass {
     return this.defaultDisk.move(path, newPath);
   }
 
+  append(data: string | Buffer, path: string): Promise<void> {
+    return this.defaultDisk.append(data, path);
+  }
+
   makeDir(dir: string): Promise<string> {
     return this.defaultDisk.makeDir(dir);
   }

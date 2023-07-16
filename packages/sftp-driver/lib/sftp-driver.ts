@@ -142,6 +142,11 @@ export class SftpDriver extends Driver {
     await this.clientFunc('rename', this.rootPath(path), this.rootPath(newPath));
   }
 
+  async append(data: string | Buffer, path: string): Promise<void> {
+    data = typeof data === 'string' ? Buffer.from(data) : data;
+    await this.clientFunc('append', data, this.rootPath(path));
+  }
+
   makeDir(dir: string): Promise<string> {
     return this.clientFunc('mkdir', dir, true);
   }
