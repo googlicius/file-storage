@@ -153,6 +153,13 @@ export class S3Driver extends Driver {
     await this.delete(path);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  append(_data: string | Buffer, _path: string): Promise<void> {
+    return new Promise((_, reject) =>
+      reject('Appending to a file currently not supported with S3'),
+    );
+  }
+
   /**
    * Create bucket for testing purpose.
    */

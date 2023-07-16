@@ -96,6 +96,10 @@ export class FtpDriver extends Driver {
     return passThrough;
   }
 
+  async append(data: string | Buffer, path: string): Promise<void> {
+    await this.clientFunc('appendFrom', toStream(data), this.rootPath(path));
+  }
+
   list(path?: string): Promise<FileInfo[]> {
     return this.clientFunc('list', this.rootPath(path));
   }

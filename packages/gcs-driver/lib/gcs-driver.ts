@@ -142,6 +142,13 @@ export class GoogleCloudStorageDriver extends Driver {
     await this.file(path).move(newPath);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async append(data: string | Buffer, path: string): Promise<void> {
+    return new Promise((_, reject) =>
+      reject('Appending to a file currently not supported with Google Cloud Storage.'),
+    );
+  }
+
   makeDir(dir: string): Promise<string> {
     return this.client
       .bucket(this.bucketName)

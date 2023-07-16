@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sftp Disk test append should append a text to a file 1`] = `
+"First line
+Appended line"
+`;

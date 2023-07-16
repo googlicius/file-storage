@@ -107,6 +107,22 @@ export abstract class Driver {
   abstract move(path: string, newPath: string): Promise<void>;
 
   /**
+   * Append to a file.
+   *
+   * @param data string | Buffer
+   * @param path File path.
+   */
+  abstract append(data: string | Buffer, path: string): Promise<void>;
+
+  /**
+   * Prepend to a file.
+   *
+   * @param data string | Buffer
+   * @param path File path.
+   */
+  // abstract prepend(data: string | Buffer, path: string): Promise<void>;
+
+  /**
    * This method will create the given directory, including any needed subdirectories.
    *
    * @throws If directory already exists.

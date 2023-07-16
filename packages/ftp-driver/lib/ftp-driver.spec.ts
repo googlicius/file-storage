@@ -1,7 +1,11 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, FtpDiskConfig, getRootCwd } from '@file-storage/common';
+import { DriverName, FtpDiskConfig, getRootCwd, streamToBuffer } from '@file-storage/common';
 import ImageManipulation from '@file-storage/image-manipulation';
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 describe('FTP Disk test', () => {
   beforeAll(() => {
@@ -52,55 +56,7 @@ describe('FTP Disk test', () => {
     );
     return expect(
       Storage.put(imageFileStream, 'my-photo/photo-1000x750.jpeg'),
-    ).resolves.toMatchObject({
-      success: true,
-      code: 226,
-      message: '226 Transfer complete.',
-      name: 'photo-1000x750.jpeg',
-      path: 'my-photo/photo-1000x750.jpeg',
-      formats: {
-        thumbnail: {
-          name: 'thumbnail_photo-1000x750.jpeg',
-          hash: null,
-          ext: 'jpeg',
-          mime: 'jpeg',
-          width: 208,
-          height: 156,
-          size: 15.9,
-          path: 'my-photo/thumbnail_photo-1000x750.jpeg',
-        },
-        large: {
-          name: 'large_photo-1000x750.jpeg',
-          hash: null,
-          ext: 'jpeg',
-          mime: 'jpeg',
-          width: 1000,
-          height: 750,
-          size: 184.49,
-          path: 'my-photo/large_photo-1000x750.jpeg',
-        },
-        medium: {
-          name: 'medium_photo-1000x750.jpeg',
-          hash: null,
-          ext: 'jpeg',
-          mime: 'jpeg',
-          width: 750,
-          height: 562,
-          size: 105.12,
-          path: 'my-photo/medium_photo-1000x750.jpeg',
-        },
-        small: {
-          name: 'small_photo-1000x750.jpeg',
-          hash: null,
-          ext: 'jpeg',
-          mime: 'jpeg',
-          width: 500,
-          height: 375,
-          size: 52.33,
-          path: 'my-photo/small_photo-1000x750.jpeg',
-        },
-      },
-    });
+    ).resolves.toMatchSnapshot();
   });
 
   // FIXME Request timed out even this test success.
@@ -165,5 +121,16 @@ describe('FTP Disk test', () => {
     expect(typeof size).toBe('number');
 
     return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError();
+  });
+
+  describe('append', () => {
+    it('should append a text to a file', async () => {
+      const putResult = await Storage.put(Buffer.from('First line'), 'to-be-appended.txt');
+      await sleep(10);
+      await Storage.append('\nAppended line', putResult.path);
+      const buff = await streamToBuffer(await Storage.get(putResult.path));
+
+      return expect(buff.toString()).toMatchSnapshot();
+    });
   });
 });

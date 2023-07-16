@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Local Disk Upload image from URI to local 1`] = `
+Object {
+  "message": "Uploading success!",
+  "success": true,
+}
+`;
+
+exports[`Local Disk Upload local large image will uploaded to many formats 1`] = `
+Object {
+  "formats": Object {
+    "large": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 750,
+      "mime": "jpeg",
+      "name": "large_photo-1000x750.jpeg",
+      "path": "my-photo/large_photo-1000x750.jpeg",
+      "size": 184.49,
+      "width": 1000,
+    },
+    "medium": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 562,
+      "mime": "jpeg",
+      "name": "medium_photo-1000x750.jpeg",
+      "path": "my-photo/medium_photo-1000x750.jpeg",
+      "size": 105.12,
+      "width": 750,
+    },
+    "small": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 375,
+      "mime": "jpeg",
+      "name": "small_photo-1000x750.jpeg",
+      "path": "my-photo/small_photo-1000x750.jpeg",
+      "size": 52.33,
+      "width": 500,
+    },
+    "thumbnail": Object {
+      "ext": "jpeg",
+      "hash": null,
+      "height": 156,
+      "mime": "jpeg",
+      "name": "thumbnail_photo-1000x750.jpeg",
+      "path": "my-photo/thumbnail_photo-1000x750.jpeg",
+      "size": 15.9,
+      "width": 208,
+    },
+  },
+  "message": "Uploading success!",
+  "name": "photo-1000x750.jpeg",
+  "path": "my-photo/photo-1000x750.jpeg",
+  "success": true,
+}
+`;
+
+exports[`Local Disk append should append a text to a file 1`] = `
+"First line
+Appended text"
+`;

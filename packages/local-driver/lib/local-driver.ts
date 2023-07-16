@@ -130,6 +130,17 @@ export class LocalDriver extends Driver {
     });
   }
 
+  append(data: string | Buffer, path: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      fs.appendFile(this.rootPath(path), data, (err) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
   async makeDir(path: string): Promise<string> {
     const dir = dirname(path);
     if (fs.existsSync(dir)) {

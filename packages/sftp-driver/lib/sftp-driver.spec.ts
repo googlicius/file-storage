@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Storage from '@file-storage/core';
-import { DriverName, getRootCwd, SftpDiskConfig } from '@file-storage/common';
+import { DriverName, getRootCwd, SftpDiskConfig, streamToBuffer } from '@file-storage/common';
 
 describe('Sftp Disk test', () => {
   beforeAll(() => {
@@ -119,4 +119,15 @@ describe('Sftp Disk test', () => {
 
   //   return expect(Storage.size('bird-images/bird.jpeg')).rejects.toThrowError();
   // });
+
+  describe('append', () => {
+    it('should append a text to a file', async () => {
+      const putResult = await Storage.put(Buffer.from('First line'), 'to-be-appended.txt');
+      // await sleep(10);
+      await Storage.append('\nAppended line', putResult.path);
+      const buff = await streamToBuffer(await Storage.get(putResult.path));
+
+      return expect(buff.toString()).toMatchSnapshot();
+    });
+  });
 });
