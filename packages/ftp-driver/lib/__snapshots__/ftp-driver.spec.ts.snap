@@ -11,7 +11,7 @@ Object {
       "mime": "jpeg",
       "name": "large_photo-1000x750.jpeg",
       "path": "my-photo/large_photo-1000x750.jpeg",
-      "size": 184.49,
+      "size": 184.27,
       "width": 1000,
     },
     "medium": Object {
@@ -21,7 +21,7 @@ Object {
       "mime": "jpeg",
       "name": "medium_photo-1000x750.jpeg",
       "path": "my-photo/medium_photo-1000x750.jpeg",
-      "size": 105.12,
+      "size": 107.14,
       "width": 750,
     },
     "small": Object {
@@ -31,7 +31,7 @@ Object {
       "mime": "jpeg",
       "name": "small_photo-1000x750.jpeg",
       "path": "my-photo/small_photo-1000x750.jpeg",
-      "size": 52.33,
+      "size": 52.36,
       "width": 500,
     },
     "thumbnail": Object {
@@ -41,7 +41,7 @@ Object {
       "mime": "jpeg",
       "name": "thumbnail_photo-1000x750.jpeg",
       "path": "my-photo/thumbnail_photo-1000x750.jpeg",
-      "size": 15.9,
+      "size": 16.15,
       "width": 208,
     },
   },
