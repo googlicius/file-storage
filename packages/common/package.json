@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "bent": "^7.3.12",
-    "sharp": "^0.32.6"
+    "sharp": "^0.28.3"
   },
   "devDependencies": {
     "@types/sharp": "^0.28.5",
