@@ -31,7 +31,7 @@
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "sharp": "^0.28.3"
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
     "@file-storage/common": "^1.3.9",
