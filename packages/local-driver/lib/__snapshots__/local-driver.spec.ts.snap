@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Local Disk Upload image from URI to local 1`] = `
-Object {
+{
   "message": "Uploading success!",
   "success": true,
 }
 `;
 
 exports[`Local Disk Upload local large image will uploaded to many formats 1`] = `
-Object {
-  "formats": Object {
-    "large": Object {
+{
+  "formats": {
+    "large": {
       "ext": "jpeg",
       "hash": null,
       "height": 750,
@@ -20,34 +20,34 @@ Object {
       "size": 184.49,
       "width": 1000,
     },
-    "medium": Object {
+    "medium": {
       "ext": "jpeg",
       "hash": null,
       "height": 562,
       "mime": "jpeg",
       "name": "medium_photo-1000x750.jpeg",
       "path": "my-photo/medium_photo-1000x750.jpeg",
-      "size": 105.12,
+      "size": 107.23,
       "width": 750,
     },
-    "small": Object {
+    "small": {
       "ext": "jpeg",
       "hash": null,
       "height": 375,
       "mime": "jpeg",
       "name": "small_photo-1000x750.jpeg",
       "path": "my-photo/small_photo-1000x750.jpeg",
-      "size": 52.33,
+      "size": 52.4,
       "width": 500,
     },
-    "thumbnail": Object {
+    "thumbnail": {
       "ext": "jpeg",
       "hash": null,
       "height": 156,
       "mime": "jpeg",
       "name": "thumbnail_photo-1000x750.jpeg",
       "path": "my-photo/thumbnail_photo-1000x750.jpeg",
-      "size": 15.9,
+      "size": 16.14,
       "width": 208,
     },
   },

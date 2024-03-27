@@ -1,36 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Image Manipulation should generates 2 custom breakpoints: size1, size2 1`] = `
-Object {
-  "formats": Object {
-    "size1": Object {
+{
+  "formats": {
+    "size1": {
       "ext": "jpeg",
       "hash": null,
       "height": 300,
       "mime": "jpeg",
       "name": "size1_bird.jpeg",
       "path": "size1_bird.jpeg",
-      "size": 35.91,
+      "size": 36.76,
       "width": 400,
     },
-    "size2": Object {
+    "size2": {
       "ext": "jpeg",
       "hash": null,
       "height": 450,
       "mime": "jpeg",
       "name": "size2_bird.jpeg",
       "path": "size2_bird.jpeg",
-      "size": 71.02,
+      "size": 70.96,
       "width": 600,
     },
-    "thumbnail": Object {
+    "thumbnail": {
       "ext": "jpeg",
       "hash": null,
       "height": 156,
       "mime": "jpeg",
       "name": "thumbnail_bird.jpeg",
       "path": "thumbnail_bird.jpeg",
-      "size": 15.9,
+      "size": 16.14,
       "width": 208,
     },
   },
@@ -42,16 +42,16 @@ Object {
 `;
 
 exports[`Image Manipulation should generates custom thumbnail size 1`] = `
-Object {
-  "formats": Object {
-    "thumbnail": Object {
+{
+  "formats": {
+    "thumbnail": {
       "ext": "jpeg",
       "hash": null,
       "height": 222,
       "mime": "jpeg",
       "name": "thumbnail_bird.jpeg",
       "path": "thumbnail_bird.jpeg",
-      "size": 24.8,
+      "size": 24.87,
       "width": 333,
     },
   },
@@ -63,16 +63,16 @@ Object {
 `;
 
 exports[`Image Manipulation should have no responsive formats 1`] = `
-Object {
-  "formats": Object {
-    "thumbnail": Object {
+{
+  "formats": {
+    "thumbnail": {
       "ext": "jpeg",
       "hash": null,
       "height": 156,
       "mime": "jpeg",
       "name": "thumbnail_bird.jpeg",
       "path": "thumbnail_bird.jpeg",
-      "size": 15.9,
+      "size": 16.14,
       "width": 208,
     },
   },
@@ -84,9 +84,9 @@ Object {
 `;
 
 exports[`Image Manipulation should have no thumbnail 1`] = `
-Object {
-  "formats": Object {
-    "large": Object {
+{
+  "formats": {
+    "large": {
       "ext": "jpeg",
       "hash": null,
       "height": 750,
@@ -96,24 +96,24 @@ Object {
       "size": 184.49,
       "width": 1000,
     },
-    "medium": Object {
+    "medium": {
       "ext": "jpeg",
       "hash": null,
       "height": 562,
       "mime": "jpeg",
       "name": "medium_bird.jpeg",
       "path": "medium_bird.jpeg",
-      "size": 105.12,
+      "size": 107.23,
       "width": 750,
     },
-    "small": Object {
+    "small": {
       "ext": "jpeg",
       "hash": null,
       "height": 375,
       "mime": "jpeg",
       "name": "small_bird.jpeg",
       "path": "small_bird.jpeg",
-      "size": 52.33,
+      "size": 52.4,
       "width": 500,
     },
   },
@@ -125,7 +125,7 @@ Object {
 `;
 
 exports[`Image Manipulation should not generate image sizes when uploading a file that not an image 1`] = `
-Object {
+{
   "formats": undefined,
   "message": "Uploading success!",
   "name": "test-file.txt",
