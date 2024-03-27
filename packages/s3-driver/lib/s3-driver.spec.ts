@@ -116,7 +116,7 @@ describe('S3 Disk test', () => {
           mime: 'jpeg',
           width: 208,
           height: 156,
-          size: 16.15,
+          size: 16.14,
           path: 'my-photo/thumbnail_photo-1000x750.jpeg',
         },
         large: {
@@ -126,7 +126,7 @@ describe('S3 Disk test', () => {
           mime: 'jpeg',
           width: 1000,
           height: 750,
-          size: 184.27,
+          size: 184.49,
           path: 'my-photo/large_photo-1000x750.jpeg',
         },
         medium: {
@@ -136,7 +136,7 @@ describe('S3 Disk test', () => {
           mime: 'jpeg',
           width: 750,
           height: 562,
-          size: 107.14,
+          size: 107.23,
           path: 'my-photo/medium_photo-1000x750.jpeg',
         },
         small: {
@@ -146,7 +146,7 @@ describe('S3 Disk test', () => {
           mime: 'jpeg',
           width: 500,
           height: 375,
-          size: 52.36,
+          size: 52.4,
           path: 'my-photo/small_photo-1000x750.jpeg',
         },
       },

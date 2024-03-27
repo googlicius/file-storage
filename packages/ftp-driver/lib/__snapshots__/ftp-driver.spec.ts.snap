@@ -1,47 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FTP Disk test Upload ftp large image will uploaded to many formats 1`] = `
-Object {
+{
   "code": 226,
-  "formats": Object {
-    "large": Object {
+  "formats": {
+    "large": {
       "ext": "jpeg",
       "hash": null,
       "height": 750,
       "mime": "jpeg",
       "name": "large_photo-1000x750.jpeg",
       "path": "my-photo/large_photo-1000x750.jpeg",
-      "size": 184.27,
+      "size": 184.49,
       "width": 1000,
     },
-    "medium": Object {
+    "medium": {
       "ext": "jpeg",
       "hash": null,
       "height": 562,
       "mime": "jpeg",
       "name": "medium_photo-1000x750.jpeg",
       "path": "my-photo/medium_photo-1000x750.jpeg",
-      "size": 107.14,
+      "size": 107.23,
       "width": 750,
     },
-    "small": Object {
+    "small": {
       "ext": "jpeg",
       "hash": null,
       "height": 375,
       "mime": "jpeg",
       "name": "small_photo-1000x750.jpeg",
       "path": "my-photo/small_photo-1000x750.jpeg",
-      "size": 52.36,
+      "size": 52.4,
       "width": 500,
     },
-    "thumbnail": Object {
+    "thumbnail": {
       "ext": "jpeg",
       "hash": null,
       "height": 156,
       "mime": "jpeg",
       "name": "thumbnail_photo-1000x750.jpeg",
       "path": "my-photo/thumbnail_photo-1000x750.jpeg",
-      "size": 16.15,
+      "size": 16.14,
       "width": 208,
     },
   },
