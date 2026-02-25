@@ -31,7 +31,7 @@
     "test:detectOpenHandles": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "basic-ftp": "^4.6.6"
+    "basic-ftp": "^5.2.0"
   },
   "peerDependencies": {
     "@file-storage/core": "^1.0.0"
